@@ -1,0 +1,46 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        app:title="Generelt">
+        <Preference
+            app:key="tilbakemelding"
+            app:title="Send tilbakemelding"
+            android:icon="@drawable/ic_feedback"
+            app:summary="Vi ønsker å vite hva du liker og ikke"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="Stedspreferanser">
+        <EditTextPreference
+            android:key="favouriteplace_pref"
+            app:title="Favorittsted"
+            android:icon="@drawable/ic_home"
+            app:useSimpleSummaryProvider="true"
+            android:dialogMessage="Skriv navnet på ditt favorittsted"
+            />
+        <EditTextPreference
+            android:key="standard_year_sort"
+            app:title="Standard årstall sortering"
+            android:icon="@drawable/ic_year"
+            app:useSimpleSummaryProvider="true"
+            android:dialogMessage="Skriv inn årstall for standard sortering"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="Info">
+        <Preference
+            app:title="Opphavrettsinformasjon"
+            android:icon="@drawable/ic_info"
+            app:summary="Mattilsynet ©2019"/>
+        <Preference
+            app:key="app_version"
+            android:enabled="false"
+            app:title="App versjon"
+            android:icon="@drawable/ic_info"
+            />
+    </PreferenceCategory>
+
+</PreferenceScreen>
