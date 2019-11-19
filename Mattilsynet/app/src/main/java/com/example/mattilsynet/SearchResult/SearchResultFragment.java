@@ -71,9 +71,9 @@ public class SearchResultFragment extends Fragment implements InfoListAdapter.On
 
     private void getData() {
         infoList.clear();
-        infoList.add(new InfoCard(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 1", "6242", "Stedsnavn"));
-        infoList.add(new InfoCard(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 2", "6242", "Stedsnavn"));
-        infoList.add(new InfoCard(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 3", "6242", "Stedsnavn"));
+        infoList.add(new InfoCard(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 1", "6242", "Stedsnavn", R.drawable.smilefjes));
+        infoList.add(new InfoCard(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 2", "6242", "Stedsnavn", R.drawable.noytralfjes));
+        infoList.add(new InfoCard(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 3", "6242", "Stedsnavn", R.drawable.noytralfjes));
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.mattilsynet;
+package com.example.mattilsynet.Home;
 
 
 import android.app.Activity;
@@ -14,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+
+import com.example.mattilsynet.R;
 
 public class HomeFragment extends Fragment {
 

@@ -9,13 +9,13 @@ public class InfoCard {
     private String placeZipName;
     private int placeGrade;
 
-    public InfoCard(String placeTitle, String placeOrgNum, String placeAddress, String placeZipCode, String placeZipName) {
+    public InfoCard(String placeTitle, String placeOrgNum, String placeAddress, String placeZipCode, String placeZipName, int placeGrade) {
         this.placeTitle = placeTitle;
         this.placeOrgNum = placeOrgNum;
         this.placeAddress = placeAddress;
         this.placeZipCode = placeZipCode;
         this.placeZipName = placeZipName;
-        //this.placeGrade = placeGrade;
+        this.placeGrade = placeGrade;
     }
 
     public InfoCard() {}

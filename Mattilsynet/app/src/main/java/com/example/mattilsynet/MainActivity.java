@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         mAppBarConfiguration = new AppBarConfiguration.Builder(
 
-                R.id.nav_home, R.id.nav_search_result)
+                R.id.nav_home, R.id.nav_search_result, R.id.nav_detailed_view)
                 .build();
 
         navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             navController.navigate(R.id.nav_preferences);
         }

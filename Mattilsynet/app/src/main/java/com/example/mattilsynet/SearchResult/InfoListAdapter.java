@@ -1,19 +1,14 @@
 package com.example.mattilsynet.SearchResult;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mattilsynet.R;
@@ -55,7 +50,7 @@ public class InfoListAdapter extends RecyclerView.Adapter<com.example.mattilsyne
         private final TextView placeAddress;
         private final TextView placeZipCode;
         private final TextView placeZipName;
-        //private final ImageView placeGrade;
+        private final ImageView placeGrade;
         final InfoListAdapter adapter;
 
         private InfoCardHolder(View itemView, InfoListAdapter adapter){
@@ -67,7 +62,7 @@ public class InfoListAdapter extends RecyclerView.Adapter<com.example.mattilsyne
             this.placeAddress = itemView.findViewById(R.id.info_card_adr);
             this.placeZipCode = itemView.findViewById(R.id.info_card_zip);
             this.placeZipName = itemView.findViewById(R.id.info_card_zipname);
-            //this.placeGrade = itemView.findViewById(R.id.info_card_grade);
+            this.placeGrade = itemView.findViewById(R.id.info_card_grade);
             this.adapter = adapter;
             //itemView.setOnClickListener(Snackbar.make(itemView, "Dette skal føre til kommentarer", Snackbar.LENGTH_LONG).show());
         }
@@ -89,6 +84,7 @@ public class InfoListAdapter extends RecyclerView.Adapter<com.example.mattilsyne
         holder.placeAddress.setText(infoList.get(position).getPlaceAddress());
         holder.placeZipCode.setText(infoList.get(position).getPlaceZipCode());
         holder.placeZipName.setText(infoList.get(position).getPlaceZipName());
+        holder.placeGrade.setImageResource(infoList.get(position).getPlaceGrade());
         holder.bind(infoList.get(position), listener);
         //holder.placeGrade.setImageResource(infoList.get(position).getPlaceGrade());
     }
