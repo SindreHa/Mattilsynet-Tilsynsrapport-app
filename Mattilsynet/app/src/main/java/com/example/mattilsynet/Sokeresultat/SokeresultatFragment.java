@@ -40,33 +40,33 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
     private InfoListeAdapter infoAdapter;
     private ArrayList<InfoKort> infoListe = new ArrayList<>();
     private final String LOG_TAG = SokeresultatFragment.class.getSimpleName();
-    public final static String ENDPOINT = "https://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn";
+    public final static String ENDPOINT = "https://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn?";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         this.view = inflater.inflate(R.layout.fragment_search_result, container, false);
 
-        initializeView();
+        initialiserView();
 
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        initializeData();
+        initialiserData();
     }
 
-    private void initializeView() {
+    private void initialiserView() {
         recyclerViewInit();
     }
 
     private void recyclerViewInit() {
         mRecyclerView = view.findViewById(R.id.recyclerView_sokeresultat);
-        updateRecyclerView();
+        oppdaterRecyclerView();
     }
 
-    private void updateRecyclerView() {
+    private void oppdaterRecyclerView() {
         infoAdapter = new InfoListeAdapter(getContext(), infoListe, new InfoListeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(InfoKort card) {
@@ -79,22 +79,22 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
-    private void initializeData() {
-        getData();
-        postAnimation();
+    private void initialiserData() {
+        hentData();
+        recyclerAnimasjon();
     }
 
-    private void getData() {
+    private void hentData() {
         infoListe.clear();
-
-        String infoliste_URL = ENDPOINT + "";
+        final Bundle sokeDataBundle = getArguments();
+        String infoliste_URL = ENDPOINT + sokeDataBundle.getString("sokeKriterier");
         if (isOnline()){
             RequestQueue queue = Volley.newRequestQueue(getContext());
             StringRequest stringRequest =
                     new StringRequest(Request.Method.GET, infoliste_URL, this, this);
             queue.add(stringRequest);
         }else{
-            makeSnackbar("Ingen nettverkstilgang. Kan ikke laste varer.");
+            lagSnackbar("Ingen nettverkstilgang. Kan ikke laste varer.");
         }
 
         /*infoListe.add(new InfoKort(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 1", "6242", "Stedsnavn", R.drawable.smilefjes));
@@ -112,15 +112,13 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
     @Override
     public void onResponse(String response) {
         try{
-            Log.d(LOG_TAG, response);
+            //Log.d(LOG_TAG, response);
             infoListe = InfoKort.createInfoCard(response);
-            updateRecyclerView();
+            oppdaterRecyclerView();
         }catch (Exception e){
-           // Log.d(LOG_TAG, "feil");
         }
-        //Aktiver scrolling for recyclerview etter animasjon
         infoAdapter.notifyDataSetChanged();
-        postAnimation();
+        recyclerAnimasjon();
     }
 
     @Override
@@ -129,7 +127,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
                 Toast.LENGTH_SHORT).show();
     }
 
-    private void postAnimation() {
+    private void recyclerAnimasjon() {
         //https://stackoverflow.com/questions/38909542/how-to-animate-recyclerview-items-when-adapter-is-initialized-in-order
         mRecyclerView.getViewTreeObserver().addOnPreDrawListener(
                 new ViewTreeObserver.OnPreDrawListener() {
@@ -160,7 +158,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
     @Override
     public void onItemClick(InfoKort card) { }
 
-    private void makeSnackbar(String melding) {
+    private void lagSnackbar(String melding) {
         final Snackbar snackBar = Snackbar.make(view, melding, Snackbar.LENGTH_LONG);
         snackBar.setAction("Ok", new View.OnClickListener() {
             @Override

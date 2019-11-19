@@ -25,10 +25,10 @@
             <TextView
                 android:id="@+id/info_kort_tittel"
                 android:layout_width="wrap_content"
+                android:maxWidth="270dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="32dp"
-                android:text=""
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 android:textColor="@color/textWhitePrimary" />
         </LinearLayout>
@@ -86,6 +86,7 @@
             <TextView
                 android:id="@+id/info_kort_adr"
                 android:layout_width="wrap_content"
+                android:maxWidth="270dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="32dp"
@@ -98,9 +99,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/info_card_adr_lay">
+
             <TextView
                 android:id="@+id/info_kort_postkode"
                 android:layout_width="wrap_content"
+                android:maxWidth="270dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="32dp"
@@ -116,6 +119,7 @@
             <TextView
                 android:id="@+id/info_kort_poststed"
                 android:layout_width="wrap_content"
+                android:maxWidth="270dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="32dp"
@@ -123,15 +127,18 @@
                 android:textColor="@color/textWhiteSecondary" />
         </LinearLayout>
 
-
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentEnd="true">
             <ImageView
                 android:id="@+id/info_kort_karakter"
                 android:layout_width="90dp"
                 android:layout_height="70dp"
                 android:layout_marginEnd="0dp"
-                android:layout_centerInParent="true"
-                android:layout_alignParentEnd="true"
                 android:paddingRight="20dp" />
+        </LinearLayout>
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

@@ -17,7 +17,7 @@ import com.example.mattilsynet.R;
 
 import java.util.ArrayList;
 
-public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.InfoCardHolder>{
+public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.InfoKortHolder>{
 
     public interface OnItemClickListener {
         void onItemClick(InfoKort card);
@@ -39,12 +39,12 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
 
     @NonNull
     @Override
-    public InfoCardHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public InfoKortHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = inflater.inflate(R.layout.info_kort_layout, parent, false);
-        return new InfoListeAdapter.InfoCardHolder(itemView,this);
+        return new InfoKortHolder(itemView,this);
     }
 
-    class InfoCardHolder extends RecyclerView.ViewHolder {
+    class InfoKortHolder extends RecyclerView.ViewHolder {
         //public final ImageView sportImg;
         CardView kontainer;
         private final TextView stedNavn;
@@ -56,7 +56,7 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
         private final ImageView stedKarakter;
         final InfoListeAdapter adapter;
 
-        private InfoCardHolder(View itemView, InfoListeAdapter adapter){
+        private InfoKortHolder(View itemView, InfoListeAdapter adapter){
             super(itemView);
             //this.stedNavn = itemView.findViewById(R.id.card_post_title);
             kontainer = itemView.findViewById(R.id.info_kort);
@@ -82,7 +82,7 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
     }
 
     @Override
-    public void onBindViewHolder(@NonNull InfoListeAdapter.InfoCardHolder holder, int position) {
+    public void onBindViewHolder(@NonNull InfoKortHolder holder, int position) {
         holder.stedNavn.setText(infoListe.get(position).getStedNavn());
         holder.stedorgNr.setText(infoListe.get(position).getStedOrgNr());
         holder.stedDato.setText(infoListe.get(position).getStedDato());
@@ -91,17 +91,16 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
         holder.stedPoststed.setText(infoListe.get(position).getStedPoststed());
         holder.stedKarakter.setImageResource(infoListe.get(position).getStedKarakter());
         holder.bind(infoListe.get(position), lytter);
-        setAnimation(holder.itemView, position);
-        //holder.stedKarakter.setImageResource(infoListe.get(position).getStedKarakter());
+        listeScrollAnimasjon(holder.itemView, position);
     }
 
     //Animasjon som fader inn infokort når man scroller
-    private void setAnimation(View viewAAnimere, int posisjon)
+    private void listeScrollAnimasjon(View infoKort, int posisjon)
     {
         if (posisjon > forrigePosisjon || posisjon < forrigePosisjon)
         {
             Animation animasjon = AnimationUtils.loadAnimation(context, R.anim.nav_default_enter_anim);
-            viewAAnimere.startAnimation(animasjon);
+            infoKort.startAnimation(animasjon);
             forrigePosisjon = posisjon;
         }
     }

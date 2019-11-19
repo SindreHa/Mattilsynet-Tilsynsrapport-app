@@ -22,7 +22,7 @@
         android:id="@+id/frontpage_header_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Søk opp tilsynsrapport"
+        android:text="@string/hjemmeside_header"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         android:textColor="@color/textWhitePrimary"
         android:layout_below="@id/logo"
@@ -44,7 +44,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/search_location_name"
+                android:id="@+id/sok_stednavn"
                 android:inputType="text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
@@ -55,24 +55,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:hint="Serveringssted postkode"
+            android:hint="@string/serveringssted_poststed"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/search_location_zipcode"
-                android:inputType="number"
+                android:id="@+id/sok_poststed"
+                android:inputType="text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/searchbtn"
+            android:id="@+id/sokeknapp"
             style="@android:style/Widget.Material.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Søk"
+            android:text="@string/sok"
             android:padding="15dp"
             android:layout_marginTop="10dp"/>
 

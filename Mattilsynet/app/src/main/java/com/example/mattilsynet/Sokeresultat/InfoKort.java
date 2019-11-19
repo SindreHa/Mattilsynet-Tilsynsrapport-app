@@ -1,5 +1,7 @@
 package com.example.mattilsynet.Sokeresultat;
 
+import android.util.Log;
+
 import com.example.mattilsynet.R;
 
 import org.json.JSONArray;
@@ -7,8 +9,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.StringJoiner;
 
 public class InfoKort {
+
+
+    private final String LOG_TAG = InfoKort.class.getSimpleName();
 
     private String stedNavn;
     private String stedOrgNr;
@@ -16,7 +22,7 @@ public class InfoKort {
     private String stedAdresse;
     private String stedPostkode;
     private String stedPoststed;
-    private int stedKarakter;
+    private String stedKarakter;
 
     static final String TABELL_NAVN         = "entries";
     static final String STED_NAVN           = "navn";
@@ -36,7 +42,7 @@ public class InfoKort {
         this.stedAdresse = jsonPost.optString(STED_ADRESSE);
         this.stedPostkode = jsonPost.optString(STED_POSTKODE);
         this.stedPoststed = jsonPost.optString(STED_POSTSTED);
-        this.stedKarakter = jsonPost.optInt(STED_KARAKTER);
+        this.stedKarakter = jsonPost.optString(STED_KARAKTER);
     }
 
 
@@ -71,7 +77,12 @@ public class InfoKort {
     }
 
     public String getStedDato() {
-        return this.stedDato;
+        //Gjør om dato til en mer lesbar dato https://stackoverflow.com/questions/63150/whats-the-best-way-to-build-a-string-of-delimited-items-in-java
+        String datoArr[] = this.stedDato.split("");
+        StringJoiner joiner = new StringJoiner("/");
+        joiner.add(datoArr[1] + datoArr[2]).add(datoArr[3] + datoArr[4]).add(datoArr[5] + datoArr[6] + datoArr[7] + datoArr[8]);
+        String joinedString = joiner.toString();
+        return joinedString;
     }
 
     public String getStedAdresse() {
@@ -87,17 +98,20 @@ public class InfoKort {
     }
 
     public int getStedKarakter() {
+        int bilde = 0;
         switch (this.stedKarakter) {
-            case 0:
-                this.stedKarakter = R.drawable.smilefjes;
+            //https://data.norge.no/data/mattilsynet/smilefjestilsyn-p%C3%A5-serveringssteder
+            case "0": case "1":
+                bilde = R.drawable.smilefjes;
                 break;
-            case 1:
-                this.stedKarakter = R.drawable.noytralfjes;
+            case "2":
+                bilde = R.drawable.noytralfjes;
                 break;
-            case 2:
-                this.stedKarakter = R.drawable.surfjes;
+            case "3":
+                bilde = R.drawable.surfjes;
                 break;
         }
-        return this.stedKarakter;
+        //Log.d(LOG_TAG, this.stedKarakter + "");
+        return bilde;
     }
 }
