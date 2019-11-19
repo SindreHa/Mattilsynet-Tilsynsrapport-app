@@ -1,4 +1,4 @@
-package com.example.mattilsynet.SearchResult;
+package com.example.mattilsynet.Sokeresultat;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -17,20 +17,20 @@ import com.example.mattilsynet.R;
 
 import java.util.ArrayList;
 
-public class InfoListAdapter extends RecyclerView.Adapter<com.example.mattilsynet.SearchResult.InfoListAdapter.InfoCardHolder>{
+public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.InfoCardHolder>{
 
     public interface OnItemClickListener {
-        void onItemClick(InfoCard card);
+        void onItemClick(InfoKort card);
     }
 
-    private final ArrayList<InfoCard> infoListe;
+    private final ArrayList<InfoKort> infoListe;
     private final OnItemClickListener lytter;
     private LayoutInflater inflater;
     private int forrigePosisjon = -1;
     private Context context;
-    private final String LOG_TAG = InfoListAdapter.class.getSimpleName();
+    private final String LOG_TAG = InfoListeAdapter.class.getSimpleName();
 
-    public InfoListAdapter(Context context, ArrayList<InfoCard> infoListe, OnItemClickListener lytter){
+    public InfoListeAdapter(Context context, ArrayList<InfoKort> infoListe, OnItemClickListener lytter){
         inflater = LayoutInflater.from(context);
         this.infoListe = infoListe;
         this.context = context;
@@ -41,7 +41,7 @@ public class InfoListAdapter extends RecyclerView.Adapter<com.example.mattilsyne
     @Override
     public InfoCardHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = inflater.inflate(R.layout.info_kort_layout, parent, false);
-        return new InfoListAdapter.InfoCardHolder(itemView,this);
+        return new InfoListeAdapter.InfoCardHolder(itemView,this);
     }
 
     class InfoCardHolder extends RecyclerView.ViewHolder {
@@ -54,9 +54,9 @@ public class InfoListAdapter extends RecyclerView.Adapter<com.example.mattilsyne
         private final TextView stedPostkode;
         private final TextView stedPoststed;
         private final ImageView stedKarakter;
-        final InfoListAdapter adapter;
+        final InfoListeAdapter adapter;
 
-        private InfoCardHolder(View itemView, InfoListAdapter adapter){
+        private InfoCardHolder(View itemView, InfoListeAdapter adapter){
             super(itemView);
             //this.stedNavn = itemView.findViewById(R.id.card_post_title);
             kontainer = itemView.findViewById(R.id.info_kort);
@@ -71,7 +71,7 @@ public class InfoListAdapter extends RecyclerView.Adapter<com.example.mattilsyne
             //itemView.setOnClickListener(Snackbar.make(itemView, "Dette skal føre til kommentarer", Snackbar.LENGTH_LONG).show());
         }
 
-        public void bind(final InfoCard card, final OnItemClickListener listener) {
+        public void bind(final InfoKort card, final OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     listener.onItemClick(card);
@@ -82,7 +82,7 @@ public class InfoListAdapter extends RecyclerView.Adapter<com.example.mattilsyne
     }
 
     @Override
-    public void onBindViewHolder(@NonNull InfoListAdapter.InfoCardHolder holder, int position) {
+    public void onBindViewHolder(@NonNull InfoListeAdapter.InfoCardHolder holder, int position) {
         holder.stedNavn.setText(infoListe.get(position).getStedNavn());
         holder.stedorgNr.setText(infoListe.get(position).getStedOrgNr());
         holder.stedDato.setText(infoListe.get(position).getStedDato());

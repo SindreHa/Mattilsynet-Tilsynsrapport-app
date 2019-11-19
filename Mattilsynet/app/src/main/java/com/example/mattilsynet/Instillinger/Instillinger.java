@@ -1,4 +1,4 @@
-package com.example.mattilsynet.settings;
+package com.example.mattilsynet.Instillinger;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.example.mattilsynet.R;
 import com.google.android.material.snackbar.Snackbar;
 
-public class Settings extends PreferenceFragmentCompat {
+public class Instillinger extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

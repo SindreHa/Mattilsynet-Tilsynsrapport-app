@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/nav_hjem"
-        android:name="com.example.mattilsynet.Home.HomeFragment"
+        android:name="com.example.mattilsynet.Hjem.HjemFragment"
         android:label="Mattilsynet"
         tools:layout="@layout/fragment_home" >
         <action
@@ -22,14 +22,14 @@
 
     <fragment
         android:id="@+id/nav_detaljert_visning"
-        android:name="com.example.mattilsynet.DetailedView.DetailedPlaceViewFragment"
+        android:name="com.example.mattilsynet.DetaljertVisning.DetaljertVisningFragment"
         android:label="Detaljert visning"
         tools:layout="@layout/fragment_detailed_place_view" >
     </fragment>
 
     <fragment
         android:id="@+id/nav_sokeresultat"
-        android:name="com.example.mattilsynet.SearchResult.SearchResultFragment"
+        android:name="com.example.mattilsynet.Sokeresultat.SokeresultatFragment"
         android:label="Søkeresultat"
         tools:layout="@layout/fragment_search_result" >
         <action
@@ -43,7 +43,7 @@
 
     <fragment
         android:id="@+id/nav_instillinger"
-        android:name="com.example.mattilsynet.settings.Settings"
+        android:name="com.example.mattilsynet.Instillinger.Instillinger"
         android:label="Instillinger"
         tools:layout="@xml/preferences" >
     </fragment>

@@ -1,4 +1,4 @@
-package com.example.mattilsynet.SearchResult;
+package com.example.mattilsynet.Sokeresultat;
 
 
 import android.app.Activity;
@@ -32,14 +32,14 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 
 
-public class SearchResultFragment extends Fragment implements InfoListAdapter.OnItemClickListener,
+public class SokeresultatFragment extends Fragment implements InfoListeAdapter.OnItemClickListener,
         Response.Listener<String>, Response.ErrorListener  {
 
     private View view;
     private RecyclerView mRecyclerView;
-    private InfoListAdapter infoAdapter;
-    private ArrayList<InfoCard> infoListe = new ArrayList<>();
-    private final String LOG_TAG = SearchResultFragment.class.getSimpleName();
+    private InfoListeAdapter infoAdapter;
+    private ArrayList<InfoKort> infoListe = new ArrayList<>();
+    private final String LOG_TAG = SokeresultatFragment.class.getSimpleName();
     public final static String ENDPOINT = "https://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn";
 
     @Override
@@ -67,9 +67,9 @@ public class SearchResultFragment extends Fragment implements InfoListAdapter.On
     }
 
     private void updateRecyclerView() {
-        infoAdapter = new InfoListAdapter(getContext(), infoListe, new InfoListAdapter.OnItemClickListener() {
+        infoAdapter = new InfoListeAdapter(getContext(), infoListe, new InfoListeAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(InfoCard card) {
+            public void onItemClick(InfoKort card) {
                 Bundle b = new Bundle();
                 b.putString("title", card.getStedAdresse());
                 Navigation.findNavController(view).navigate(R.id.action_nav_search_result_to_nav_detailed_view, b);
@@ -97,9 +97,9 @@ public class SearchResultFragment extends Fragment implements InfoListAdapter.On
             makeSnackbar("Ingen nettverkstilgang. Kan ikke laste varer.");
         }
 
-        /*infoListe.add(new InfoCard(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 1", "6242", "Stedsnavn", R.drawable.smilefjes));
-        infoListe.add(new InfoCard(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 2", "6242", "Stedsnavn", R.drawable.noytralfjes));
-        infoListe.add(new InfoCard(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 3", "6242", "Stedsnavn", R.drawable.noytralfjes));*/
+        /*infoListe.add(new InfoKort(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 1", "6242", "Stedsnavn", R.drawable.smilefjes));
+        infoListe.add(new InfoKort(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 2", "6242", "Stedsnavn", R.drawable.noytralfjes));
+        infoListe.add(new InfoKort(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 3", "6242", "Stedsnavn", R.drawable.noytralfjes));*/
     }
 
     // Sjekker om nettverkstilgang
@@ -113,7 +113,7 @@ public class SearchResultFragment extends Fragment implements InfoListAdapter.On
     public void onResponse(String response) {
         try{
             Log.d(LOG_TAG, response);
-            infoListe = InfoCard.createInfoCard(response);
+            infoListe = InfoKort.createInfoCard(response);
             updateRecyclerView();
         }catch (Exception e){
            // Log.d(LOG_TAG, "feil");
@@ -158,7 +158,7 @@ public class SearchResultFragment extends Fragment implements InfoListAdapter.On
     }
 
     @Override
-    public void onItemClick(InfoCard card) { }
+    public void onItemClick(InfoKort card) { }
 
     private void makeSnackbar(String melding) {
         final Snackbar snackBar = Snackbar.make(view, melding, Snackbar.LENGTH_LONG);

@@ -1,4 +1,4 @@
-package com.example.mattilsynet.Home;
+package com.example.mattilsynet.Hjem;
 
 
 import android.app.Activity;
@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
@@ -17,10 +16,10 @@ import android.widget.Button;
 
 import com.example.mattilsynet.R;
 
-public class HomeFragment extends Fragment {
+public class HjemFragment extends Fragment {
 
     private View view;
-    public HomeFragment() {}
+    public HjemFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

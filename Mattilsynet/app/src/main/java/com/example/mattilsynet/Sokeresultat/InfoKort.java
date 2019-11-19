@@ -1,4 +1,4 @@
-package com.example.mattilsynet.SearchResult;
+package com.example.mattilsynet.Sokeresultat;
 
 import com.example.mattilsynet.R;
 
@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class InfoCard {
+public class InfoKort {
 
     private String stedNavn;
     private String stedOrgNr;
@@ -27,9 +27,9 @@ public class InfoCard {
     static final String STED_POSTSTED       = "poststed";
     static final String STED_KARAKTER       = "total_karakter";
 
-    public InfoCard() {}
+    public InfoKort() {}
 
-    public InfoCard(JSONObject jsonPost) {
+    public InfoKort(JSONObject jsonPost) {
         this.stedNavn = jsonPost.optString(STED_NAVN);
         this.stedOrgNr = jsonPost.optString(STED_ORGNR);
         this.stedDato = jsonPost.optString(STED_DATO);
@@ -40,10 +40,10 @@ public class InfoCard {
     }
 
 
-    public static ArrayList<InfoCard> createInfoCard(String jsonPostString)
+    public static ArrayList<InfoKort> createInfoCard(String jsonPostString)
             throws JSONException, NullPointerException {
 
-        ArrayList<InfoCard> postListe = new ArrayList<InfoCard>();
+        ArrayList<InfoKort> postListe = new ArrayList<InfoKort>();
         JSONObject jsonData  = new JSONObject(jsonPostString);
         JSONArray jsonPostTabell = jsonData.optJSONArray("entries");
 
@@ -52,7 +52,7 @@ public class InfoCard {
             for (int i = 0; i < jsonPostTabell.length(); i++) {
                 JSONObject jsonPost = (JSONObject) jsonPostTabell.get(i);
                 // jsonPost må matche verdiene i databasetabellen post
-                InfoCard postKort = new InfoCard(jsonPost);
+                InfoKort postKort = new InfoKort(jsonPost);
                 postListe.add(postKort);
             }
         } else {

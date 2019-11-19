@@ -1,4 +1,4 @@
-package com.example.mattilsynet.DetailedView;
+package com.example.mattilsynet.DetaljertVisning;
 
 
 import android.os.Bundle;
@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.example.mattilsynet.R;
 
-public class DetailedPlaceViewFragment extends Fragment {
+public class DetaljertVisningFragment extends Fragment {
 
-    public DetailedPlaceViewFragment() {
+    public DetaljertVisningFragment() {
     }
 
     @Override
