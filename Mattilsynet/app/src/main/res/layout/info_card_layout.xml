@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="32dp"
-                android:text="@string/placeholder_title"
+                android:text=""
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
                 android:textColor="@color/textWhitePrimary" />
         </LinearLayout>
@@ -40,12 +40,39 @@
             android:layout_below="@id/info_card_title_lay"
             android:layout_marginTop="6dp">
             <TextView
-                android:id="@+id/info_card_orgnr"
+                android:id="@+id/info_card_orgnr_string"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="32dp"
-                android:text="Org. nr: 24362245323"
+                android:text="Org. nr: "
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@color/textWhiteSecondary" />
+            <TextView
+                android:id="@+id/info_card_orgnr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@color/textWhiteSecondary" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/info_card_date_lay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/info_card_orgnr_lay"
+            android:layout_marginTop="6dp">
+            <TextView
+                android:id="@+id/info_card_date_string"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Dato: "
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textColor="@color/textWhiteSecondary" />
+            <TextView
+                android:id="@+id/info_card_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:textColor="@color/textWhiteSecondary" />
         </LinearLayout>
@@ -54,15 +81,14 @@
             android:id="@+id/info_card_adr_lay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/info_card_orgnr_lay"
-            android:layout_marginTop="3dp">
+            android:layout_below="@id/info_card_date_lay"
+            android:layout_marginTop="6dp">
             <TextView
                 android:id="@+id/info_card_adr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="32dp"
-                android:text="Gatenavn 19"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:textColor="@color/textWhiteSecondary" />
         </LinearLayout>
@@ -78,7 +104,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="32dp"
-                android:text="4512"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:textColor="@color/textWhiteSecondary" />
         </LinearLayout>
@@ -94,7 +119,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="32dp"
-                android:text="Stedsnavn"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:textColor="@color/textWhiteSecondary" />
         </LinearLayout>
@@ -107,8 +131,7 @@
                 android:layout_marginEnd="0dp"
                 android:layout_centerInParent="true"
                 android:layout_alignParentEnd="true"
-                android:paddingRight="20dp"
-                android:src="@drawable/smilefjes" />
+                android:paddingRight="20dp" />
     </RelativeLayout>
 
 </androidx.cardview.widget.CardView>

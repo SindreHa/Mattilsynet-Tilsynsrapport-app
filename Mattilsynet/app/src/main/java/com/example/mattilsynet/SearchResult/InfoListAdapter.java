@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -47,6 +49,7 @@ public class InfoListAdapter extends RecyclerView.Adapter<com.example.mattilsyne
         CardView container;
         private final TextView placeTitle;
         private final TextView placeOrgNum;
+        private final TextView placeDate;
         private final TextView placeAddress;
         private final TextView placeZipCode;
         private final TextView placeZipName;
@@ -59,6 +62,7 @@ public class InfoListAdapter extends RecyclerView.Adapter<com.example.mattilsyne
             container = itemView.findViewById(R.id.info_card);
             this.placeTitle = itemView.findViewById(R.id.info_card_title);
             this.placeOrgNum = itemView.findViewById(R.id.info_card_orgnr);
+            this.placeDate = itemView.findViewById(R.id.info_card_date);
             this.placeAddress = itemView.findViewById(R.id.info_card_adr);
             this.placeZipCode = itemView.findViewById(R.id.info_card_zip);
             this.placeZipName = itemView.findViewById(R.id.info_card_zipname);
@@ -81,12 +85,25 @@ public class InfoListAdapter extends RecyclerView.Adapter<com.example.mattilsyne
     public void onBindViewHolder(@NonNull InfoListAdapter.InfoCardHolder holder, int position) {
         holder.placeTitle.setText(infoList.get(position).getPlaceTitle());
         holder.placeOrgNum.setText(infoList.get(position).getPlaceOrgNum());
+        holder.placeDate.setText(infoList.get(position).getPlaceDate());
         holder.placeAddress.setText(infoList.get(position).getPlaceAddress());
         holder.placeZipCode.setText(infoList.get(position).getPlaceZipCode());
         holder.placeZipName.setText(infoList.get(position).getPlaceZipName());
         holder.placeGrade.setImageResource(infoList.get(position).getPlaceGrade());
         holder.bind(infoList.get(position), listener);
+        setAnimation(holder.itemView, position);
         //holder.placeGrade.setImageResource(infoList.get(position).getPlaceGrade());
+    }
+
+    //Animasjon som fader inn infokort når man scroller
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        if (position > lastPosition || position < lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.nav_default_enter_anim);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
     }
 
     @Override
