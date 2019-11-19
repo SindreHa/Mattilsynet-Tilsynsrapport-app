@@ -1,5 +1,7 @@
 package com.example.mattilsynet.SearchResult;
 
+import com.example.mattilsynet.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,45 +10,35 @@ import java.util.ArrayList;
 
 public class InfoCard {
 
-    private String placeTitle;
-    private String placeOrgNum;
-    private String placeDate;
-    private String placeAddress;
-    private String placeZipCode;
-    private String placeZipName;
-    private int placeGrade;
+    private String stedNavn;
+    private String stedOrgNr;
+    private String stedDato;
+    private String stedAdresse;
+    private String stedPostkode;
+    private String stedPoststed;
+    private int stedKarakter;
 
     static final String TABELL_NAVN         = "entries";
-    static final String PLACE_TITLE         = "navn";
-    static final String PLACE_ORGNUM        = "orgnummer";
-    static final String PLACE_DATE          = "dato";
-    static final String PLACE_ADDRESS       = "adrlinje1";
-    static final String PLACE_ZIPCODE       = "postnr";
-    static final String PLACE_ZIPNAME       = "poststed";
-    static final String PLACE_GRADE         = "total_karakter";
-
-    public InfoCard(String placeTitle, String placeOrgNum, String placeAddress, String placeZipCode, String placeZipName, int placeGrade) {
-        this.placeTitle     = placeTitle;
-        this.placeOrgNum    = placeOrgNum;
-        this.placeAddress   = placeAddress;
-        this.placeZipCode   = placeZipCode;
-        this.placeZipName   = placeZipName;
-        this.placeGrade     = placeGrade;
-    }
-
-    public InfoCard(JSONObject jsonPost) {
-        this.placeTitle     = jsonPost.optString(PLACE_TITLE);
-        this.placeOrgNum    = jsonPost.optString(PLACE_ORGNUM);
-        this.placeDate      = jsonPost.optString(PLACE_DATE);
-        this.placeAddress   = jsonPost.optString(PLACE_ADDRESS);
-        this.placeZipCode   = jsonPost.optString(PLACE_ZIPCODE);
-        this.placeZipName   = jsonPost.optString(PLACE_ZIPNAME);
-        //this.placeGrade     = jsonPost.optString(PLACE_GRADE);
-        //if (jsonPost.optInt(PLACE_GRADE) == 1) {}
-        //this.placeGrade     = R.drawable.smilefjes;
-    }
+    static final String STED_NAVN           = "navn";
+    static final String STED_ORGNR          = "orgnummer";
+    static final String STED_DATO           = "dato";
+    static final String STED_ADRESSE        = "adrlinje1";
+    static final String STED_POSTKODE       = "postnr";
+    static final String STED_POSTSTED       = "poststed";
+    static final String STED_KARAKTER       = "total_karakter";
 
     public InfoCard() {}
+
+    public InfoCard(JSONObject jsonPost) {
+        this.stedNavn = jsonPost.optString(STED_NAVN);
+        this.stedOrgNr = jsonPost.optString(STED_ORGNR);
+        this.stedDato = jsonPost.optString(STED_DATO);
+        this.stedAdresse = jsonPost.optString(STED_ADRESSE);
+        this.stedPostkode = jsonPost.optString(STED_POSTKODE);
+        this.stedPoststed = jsonPost.optString(STED_POSTSTED);
+        this.stedKarakter = jsonPost.optInt(STED_KARAKTER);
+    }
+
 
     public static ArrayList<InfoCard> createInfoCard(String jsonPostString)
             throws JSONException, NullPointerException {
@@ -70,31 +62,42 @@ public class InfoCard {
         return postListe;
     }
 
-    public String getPlaceTitle() {
-        return this.placeTitle;
+    public String getStedNavn() {
+        return this.stedNavn;
     }
 
-    public String getPlaceOrgNum() {
-        return this.placeOrgNum;
+    public String getStedOrgNr() {
+        return this.stedOrgNr;
     }
 
-    public String getPlaceDate() {
-        return this.placeDate;
+    public String getStedDato() {
+        return this.stedDato;
     }
 
-    public String getPlaceAddress() {
-        return this.placeAddress;
+    public String getStedAdresse() {
+        return this.stedAdresse;
     }
 
-    public String getPlaceZipCode() {
-        return this.placeZipCode;
+    public String getStedPostkode() {
+        return this.stedPostkode;
     }
 
-    public String getPlaceZipName() {
-        return this.placeZipName;
+    public String getStedPoststed() {
+        return this.stedPoststed;
     }
 
-    public int getPlaceGrade() {
-        return this.placeGrade;
+    public int getStedKarakter() {
+        switch (this.stedKarakter) {
+            case 0:
+                this.stedKarakter = R.drawable.smilefjes;
+                break;
+            case 1:
+                this.stedKarakter = R.drawable.noytralfjes;
+                break;
+            case 2:
+                this.stedKarakter = R.drawable.surfjes;
+                break;
+        }
+        return this.stedKarakter;
     }
 }

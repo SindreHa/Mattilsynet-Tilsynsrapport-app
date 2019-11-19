@@ -20,7 +20,7 @@
     -->
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView_search_result"
+        android:id="@+id/recyclerView_sokeresultat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"/>

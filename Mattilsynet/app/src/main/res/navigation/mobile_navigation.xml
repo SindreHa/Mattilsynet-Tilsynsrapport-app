@@ -4,16 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_home">
+    app:startDestination="@+id/nav_hjem">
 
     <fragment
-        android:id="@+id/nav_home"
+        android:id="@+id/nav_hjem"
         android:name="com.example.mattilsynet.Home.HomeFragment"
         android:label="Mattilsynet"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_nav_home_to_nav_search_result"
-            app:destination="@id/nav_search_result"
+            app:destination="@id/nav_sokeresultat"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -21,20 +21,20 @@
     </fragment>
 
     <fragment
-        android:id="@+id/nav_detailed_view"
+        android:id="@+id/nav_detaljert_visning"
         android:name="com.example.mattilsynet.DetailedView.DetailedPlaceViewFragment"
         android:label="Detaljert visning"
         tools:layout="@layout/fragment_detailed_place_view" >
     </fragment>
 
     <fragment
-        android:id="@+id/nav_search_result"
+        android:id="@+id/nav_sokeresultat"
         android:name="com.example.mattilsynet.SearchResult.SearchResultFragment"
         android:label="Søkeresultat"
         tools:layout="@layout/fragment_search_result" >
         <action
             android:id="@+id/action_nav_search_result_to_nav_detailed_view"
-            app:destination="@id/nav_detailed_view"
+            app:destination="@id/nav_detaljert_visning"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -42,7 +42,7 @@
     </fragment>
 
     <fragment
-        android:id="@+id/nav_preferences"
+        android:id="@+id/nav_instillinger"
         android:name="com.example.mattilsynet.settings.Settings"
         android:label="Instillinger"
         tools:layout="@xml/preferences" >

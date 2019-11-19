@@ -2,7 +2,6 @@ package com.example.mattilsynet.SearchResult;
 
 
 import android.app.Activity;
-import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -30,8 +29,6 @@ import com.android.volley.toolbox.Volley;
 import com.example.mattilsynet.R;
 import com.google.android.material.snackbar.Snackbar;
 
-import org.json.JSONException;
-
 import java.util.ArrayList;
 
 
@@ -41,7 +38,7 @@ public class SearchResultFragment extends Fragment implements InfoListAdapter.On
     private View view;
     private RecyclerView mRecyclerView;
     private InfoListAdapter infoAdapter;
-    private ArrayList<InfoCard> infoList = new ArrayList<>();
+    private ArrayList<InfoCard> infoListe = new ArrayList<>();
     private final String LOG_TAG = SearchResultFragment.class.getSimpleName();
     public final static String ENDPOINT = "https://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn";
 
@@ -65,16 +62,16 @@ public class SearchResultFragment extends Fragment implements InfoListAdapter.On
     }
 
     private void recyclerViewInit() {
-        mRecyclerView = view.findViewById(R.id.recyclerView_search_result);
+        mRecyclerView = view.findViewById(R.id.recyclerView_sokeresultat);
         updateRecyclerView();
     }
 
     private void updateRecyclerView() {
-        infoAdapter = new InfoListAdapter(getContext(), infoList, new InfoListAdapter.OnItemClickListener() {
+        infoAdapter = new InfoListAdapter(getContext(), infoListe, new InfoListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(InfoCard card) {
                 Bundle b = new Bundle();
-                b.putString("title", card.getPlaceAddress());
+                b.putString("title", card.getStedAdresse());
                 Navigation.findNavController(view).navigate(R.id.action_nav_search_result_to_nav_detailed_view, b);
             }
         });
@@ -88,21 +85,21 @@ public class SearchResultFragment extends Fragment implements InfoListAdapter.On
     }
 
     private void getData() {
-        infoList.clear();
+        infoListe.clear();
 
-        String vareliste_URL = ENDPOINT + "?dato=*2016";
+        String infoliste_URL = ENDPOINT + "";
         if (isOnline()){
             RequestQueue queue = Volley.newRequestQueue(getContext());
             StringRequest stringRequest =
-                    new StringRequest(Request.Method.GET, vareliste_URL, this, this);
+                    new StringRequest(Request.Method.GET, infoliste_URL, this, this);
             queue.add(stringRequest);
         }else{
             makeSnackbar("Ingen nettverkstilgang. Kan ikke laste varer.");
         }
 
-        /*infoList.add(new InfoCard(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 1", "6242", "Stedsnavn", R.drawable.smilefjes));
-        infoList.add(new InfoCard(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 2", "6242", "Stedsnavn", R.drawable.noytralfjes));
-        infoList.add(new InfoCard(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 3", "6242", "Stedsnavn", R.drawable.noytralfjes));*/
+        /*infoListe.add(new InfoCard(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 1", "6242", "Stedsnavn", R.drawable.smilefjes));
+        infoListe.add(new InfoCard(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 2", "6242", "Stedsnavn", R.drawable.noytralfjes));
+        infoListe.add(new InfoCard(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 3", "6242", "Stedsnavn", R.drawable.noytralfjes));*/
     }
 
     // Sjekker om nettverkstilgang
@@ -116,7 +113,7 @@ public class SearchResultFragment extends Fragment implements InfoListAdapter.On
     public void onResponse(String response) {
         try{
             Log.d(LOG_TAG, response);
-            infoList = InfoCard.createInfoCard(response);
+            infoListe = InfoCard.createInfoCard(response);
             updateRecyclerView();
         }catch (Exception e){
            // Log.d(LOG_TAG, "feil");

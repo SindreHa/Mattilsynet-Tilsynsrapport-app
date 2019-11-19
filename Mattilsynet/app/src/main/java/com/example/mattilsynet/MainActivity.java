@@ -2,10 +2,6 @@ package com.example.mattilsynet;
 
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -14,14 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.ui.NavigationUI;
 
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration mAppBarConfiguration;
-    private NavController navController;
+    private AppBarConfiguration mAppBarKonfigurasjon;
+    private NavController navKontroller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +26,13 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mAppBarConfiguration = new AppBarConfiguration.Builder(
+        mAppBarKonfigurasjon = new AppBarConfiguration.Builder(
 
-                R.id.nav_home, R.id.nav_search_result, R.id.nav_detailed_view)
+                R.id.nav_hjem, R.id.nav_sokeresultat, R.id.nav_detaljert_visning)
                 .build();
 
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupActionBarWithNavController(this, navController);
+        navKontroller = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navKontroller);
     }
 
     @Override
@@ -51,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            navController.navigate(R.id.nav_preferences);
+        if (id == R.id.action_instillinger) {
+            navKontroller.navigate(R.id.nav_instillinger);
         }
 
         return super.onOptionsItemSelected(item);
@@ -60,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+        NavController navKontroller = Navigation.findNavController(this, R.id.nav_host_fragment);
+        return NavigationUI.navigateUp(navKontroller, mAppBarKonfigurasjon)
                 || super.onSupportNavigateUp();
     }
 }

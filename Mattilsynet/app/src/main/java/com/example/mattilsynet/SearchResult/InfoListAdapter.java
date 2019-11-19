@@ -23,50 +23,50 @@ public class InfoListAdapter extends RecyclerView.Adapter<com.example.mattilsyne
         void onItemClick(InfoCard card);
     }
 
-    private final ArrayList<InfoCard> infoList;
-    private final OnItemClickListener listener;
+    private final ArrayList<InfoCard> infoListe;
+    private final OnItemClickListener lytter;
     private LayoutInflater inflater;
-    private int lastPosition = -1;
+    private int forrigePosisjon = -1;
     private Context context;
     private final String LOG_TAG = InfoListAdapter.class.getSimpleName();
 
-    public InfoListAdapter(Context context, ArrayList<InfoCard> infoList, OnItemClickListener listener){
+    public InfoListAdapter(Context context, ArrayList<InfoCard> infoListe, OnItemClickListener lytter){
         inflater = LayoutInflater.from(context);
-        this.infoList = infoList;
+        this.infoListe = infoListe;
         this.context = context;
-        this.listener = listener;
+        this.lytter = lytter;
     }
 
     @NonNull
     @Override
     public InfoCardHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = inflater.inflate(R.layout.info_card_layout, parent, false);
+        View itemView = inflater.inflate(R.layout.info_kort_layout, parent, false);
         return new InfoListAdapter.InfoCardHolder(itemView,this);
     }
 
     class InfoCardHolder extends RecyclerView.ViewHolder {
         //public final ImageView sportImg;
-        CardView container;
-        private final TextView placeTitle;
-        private final TextView placeOrgNum;
-        private final TextView placeDate;
-        private final TextView placeAddress;
-        private final TextView placeZipCode;
-        private final TextView placeZipName;
-        private final ImageView placeGrade;
+        CardView kontainer;
+        private final TextView stedNavn;
+        private final TextView stedorgNr;
+        private final TextView stedDato;
+        private final TextView stedAdresse;
+        private final TextView stedPostkode;
+        private final TextView stedPoststed;
+        private final ImageView stedKarakter;
         final InfoListAdapter adapter;
 
         private InfoCardHolder(View itemView, InfoListAdapter adapter){
             super(itemView);
-            //this.placeTitle = itemView.findViewById(R.id.card_post_title);
-            container = itemView.findViewById(R.id.info_card);
-            this.placeTitle = itemView.findViewById(R.id.info_card_title);
-            this.placeOrgNum = itemView.findViewById(R.id.info_card_orgnr);
-            this.placeDate = itemView.findViewById(R.id.info_card_date);
-            this.placeAddress = itemView.findViewById(R.id.info_card_adr);
-            this.placeZipCode = itemView.findViewById(R.id.info_card_zip);
-            this.placeZipName = itemView.findViewById(R.id.info_card_zipname);
-            this.placeGrade = itemView.findViewById(R.id.info_card_grade);
+            //this.stedNavn = itemView.findViewById(R.id.card_post_title);
+            kontainer = itemView.findViewById(R.id.info_kort);
+            this.stedNavn = itemView.findViewById(R.id.info_kort_tittel);
+            this.stedorgNr = itemView.findViewById(R.id.info_kort_orgnr);
+            this.stedDato = itemView.findViewById(R.id.info_kort_dato);
+            this.stedAdresse = itemView.findViewById(R.id.info_kort_adr);
+            this.stedPostkode = itemView.findViewById(R.id.info_kort_postkode);
+            this.stedPoststed = itemView.findViewById(R.id.info_kort_poststed);
+            this.stedKarakter = itemView.findViewById(R.id.info_kort_karakter);
             this.adapter = adapter;
             //itemView.setOnClickListener(Snackbar.make(itemView, "Dette skal føre til kommentarer", Snackbar.LENGTH_LONG).show());
         }
@@ -83,32 +83,32 @@ public class InfoListAdapter extends RecyclerView.Adapter<com.example.mattilsyne
 
     @Override
     public void onBindViewHolder(@NonNull InfoListAdapter.InfoCardHolder holder, int position) {
-        holder.placeTitle.setText(infoList.get(position).getPlaceTitle());
-        holder.placeOrgNum.setText(infoList.get(position).getPlaceOrgNum());
-        holder.placeDate.setText(infoList.get(position).getPlaceDate());
-        holder.placeAddress.setText(infoList.get(position).getPlaceAddress());
-        holder.placeZipCode.setText(infoList.get(position).getPlaceZipCode());
-        holder.placeZipName.setText(infoList.get(position).getPlaceZipName());
-        holder.placeGrade.setImageResource(infoList.get(position).getPlaceGrade());
-        holder.bind(infoList.get(position), listener);
+        holder.stedNavn.setText(infoListe.get(position).getStedNavn());
+        holder.stedorgNr.setText(infoListe.get(position).getStedOrgNr());
+        holder.stedDato.setText(infoListe.get(position).getStedDato());
+        holder.stedAdresse.setText(infoListe.get(position).getStedAdresse());
+        holder.stedPostkode.setText(infoListe.get(position).getStedPostkode());
+        holder.stedPoststed.setText(infoListe.get(position).getStedPoststed());
+        holder.stedKarakter.setImageResource(infoListe.get(position).getStedKarakter());
+        holder.bind(infoListe.get(position), lytter);
         setAnimation(holder.itemView, position);
-        //holder.placeGrade.setImageResource(infoList.get(position).getPlaceGrade());
+        //holder.stedKarakter.setImageResource(infoListe.get(position).getStedKarakter());
     }
 
     //Animasjon som fader inn infokort når man scroller
-    private void setAnimation(View viewToAnimate, int position)
+    private void setAnimation(View viewAAnimere, int posisjon)
     {
-        if (position > lastPosition || position < lastPosition)
+        if (posisjon > forrigePosisjon || posisjon < forrigePosisjon)
         {
-            Animation animation = AnimationUtils.loadAnimation(context, R.anim.nav_default_enter_anim);
-            viewToAnimate.startAnimation(animation);
-            lastPosition = position;
+            Animation animasjon = AnimationUtils.loadAnimation(context, R.anim.nav_default_enter_anim);
+            viewAAnimere.startAnimation(animasjon);
+            forrigePosisjon = posisjon;
         }
     }
 
     @Override
     public int getItemCount() {
-        return infoList.size();
+        return infoListe.size();
     }
 
 }
