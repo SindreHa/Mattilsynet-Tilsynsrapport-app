@@ -18,23 +18,23 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
-        <action
-            android:id="@+id/action_nav_home_to_nav_preferences"
-            app:destination="@id/nav_preferences"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_detailed_view"
+        android:name="com.example.mattilsynet.DetailedView.DetailedPlaceViewFragment"
+        android:label="Detaljert visning"
+        tools:layout="@layout/fragment_detailed_place_view" >
     </fragment>
 
     <fragment
         android:id="@+id/nav_search_result"
         android:name="com.example.mattilsynet.SearchResult.SearchResultFragment"
         android:label="Søkeresultat"
-        tools:layout="@layout/fragment_fragment_search_result" >
+        tools:layout="@layout/fragment_search_result" >
         <action
-            android:id="@+id/action_nav_search_result_to_nav_preferences"
-            app:destination="@id/nav_preferences"
+            android:id="@+id/action_nav_search_result_to_nav_detailed_view"
+            app:destination="@id/nav_detailed_view"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -43,7 +43,7 @@
 
     <fragment
         android:id="@+id/nav_preferences"
-        android:name="com.example.mattilsynet.settings.fragment_settings"
+        android:name="com.example.mattilsynet.settings.Settings"
         android:label="Instillinger"
         tools:layout="@xml/preferences" >
     </fragment>

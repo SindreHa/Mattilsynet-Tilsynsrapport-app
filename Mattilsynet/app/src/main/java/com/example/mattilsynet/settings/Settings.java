@@ -13,7 +13,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.example.mattilsynet.R;
 import com.google.android.material.snackbar.Snackbar;
 
-public class fragment_settings extends PreferenceFragmentCompat {
+public class Settings extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {

@@ -1,20 +1,23 @@
 package com.example.mattilsynet;
 
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 public class HomeFragment extends Fragment {
 
     private View view;
-
     public HomeFragment() {}
 
     @Override
@@ -33,7 +36,20 @@ public class HomeFragment extends Fragment {
 
     private void setClickListeners() {
         Button btn = view.findViewById(R.id.searchbtn);
-        btn.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_nav_home_to_nav_search_result));
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideKeyboardFrom(getContext(), v);
+                Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_search_result);
+            }
+        });
+    }
+
+    //Legger ned virtuelt tastatur https://stackoverflow.com/questions/1109022/close-hide-the-android-soft-keyboard
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }
