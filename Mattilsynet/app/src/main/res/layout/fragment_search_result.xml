@@ -57,8 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_cancel"
-                android:clickable="true"
-                android:foreground="?android:selectableItemBackground" />
+                android:clickable="true"/>
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
@@ -106,5 +105,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"/>
+
+
+    <LinearLayout
+        android:id="@+id/no_search_result"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="100dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/shrug"
+            android:layout_gravity="center"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            android:text="Søket ga ingen treff"
+            android:gravity="center"/>
+
+    </LinearLayout>
 
 </LinearLayout>

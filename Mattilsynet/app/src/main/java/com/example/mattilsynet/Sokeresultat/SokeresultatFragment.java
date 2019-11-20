@@ -2,6 +2,7 @@ package com.example.mattilsynet.Sokeresultat;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,10 +22,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,6 +70,20 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         initialiserData();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        //Holder aktivt filter knapp synlig når man returnerer til fragment fra detaljert visning fragment
+        if (!filterArstall.matches("")) {
+            TextView klarerFilterVerdi = view.findViewById(R.id.klarer_filter_verdi);
+            klarerFilterVerdi.setText(filterArstall);
+            fjernFilterKort.setVisibility(View.VISIBLE);
+            fjernFilterKort.setScaleX(1);
+            fjernFilterKort.setScaleY(1);
+        }
     }
 
     private void initialiserView() {
@@ -128,7 +146,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
         infoListe.clear();
         final Bundle sokeDataBundle = getArguments();
         String infoliste_URL = ENDPOINT + sokeDataBundle.getString("sokeKriterier") + "&dato=*" + filterArstall;
-        Log.d(LOG_TAG, infoliste_URL);
+        //Log.d(LOG_TAG, infoliste_URL);
         if (isOnline()){
             RequestQueue queue = Volley.newRequestQueue(getContext());
             StringRequest stringRequest =
@@ -152,8 +170,20 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
 
     @Override
     public void onResponse(String response) {
+
+        LinearLayout ingenTreff = view.findViewById(R.id.no_search_result);
+        String sResponse = response;
+        String sok  = ":[]"; //Hvis det ikke er noen treff viser entries tabellen :[]
+
+        if (sResponse.toLowerCase().contains(sok.toLowerCase())) {
+            mRecyclerView.setVisibility(View.GONE);
+            ingenTreff.setVisibility(View.VISIBLE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            ingenTreff.setVisibility(View.GONE);
+        }
         try{
-            //Log.d(LOG_TAG, response);
+            Log.d(LOG_TAG, response);
             infoListe = InfoKort.createInfoCard(response);
             oppdaterRecyclerView();
         }catch (Exception e){
@@ -232,6 +262,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
                 .setNegativeButton("Avbryt", null)
                 .create();
         dialog.show();
+        text.requestFocus();
     }
 
     private void lagSnackbar(String melding) {
