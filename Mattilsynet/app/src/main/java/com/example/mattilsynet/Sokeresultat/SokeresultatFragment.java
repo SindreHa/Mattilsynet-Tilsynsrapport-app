@@ -2,11 +2,15 @@ package com.example.mattilsynet.Sokeresultat;
 
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +22,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -37,7 +45,10 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
 
     private View view;
     private RecyclerView mRecyclerView;
+    ImageView fjernFilter;
+    CardView fjernFilterKort;
     private InfoListeAdapter infoAdapter;
+    String filterArstall = "";
     private ArrayList<InfoKort> infoListe = new ArrayList<>();
     private final String LOG_TAG = SokeresultatFragment.class.getSimpleName();
     public final static String ENDPOINT = "https://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn?";
@@ -59,6 +70,35 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
 
     private void initialiserView() {
         recyclerViewInit();
+        settKlikkLyttere();
+    }
+
+    private void settKlikkLyttere() {
+        CardView knapp = view.findViewById(R.id.filter_sok);
+        knapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                filterDialog();
+            }
+        });
+
+        fjernFilter = view.findViewById(R.id.klarer_filter);
+        fjernFilterKort = view.findViewById(R.id.klarer_filter_kort);
+        fjernFilterKort.setVisibility(View.INVISIBLE);
+
+        fjernFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fjernFilterKort.animate()
+                        .scaleX(0)
+                        .scaleY(0)
+                        .setDuration(250)
+                        .start();
+
+                filterArstall = "";
+                initialiserData();
+            }
+        });
     }
 
     private void recyclerViewInit() {
@@ -87,7 +127,8 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
     private void hentData() {
         infoListe.clear();
         final Bundle sokeDataBundle = getArguments();
-        String infoliste_URL = ENDPOINT + sokeDataBundle.getString("sokeKriterier");
+        String infoliste_URL = ENDPOINT + sokeDataBundle.getString("sokeKriterier") + "&dato=*" + filterArstall;
+        Log.d(LOG_TAG, infoliste_URL);
         if (isOnline()){
             RequestQueue queue = Volley.newRequestQueue(getContext());
             StringRequest stringRequest =
@@ -157,6 +198,41 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
 
     @Override
     public void onItemClick(InfoKort card) { }
+
+    public void filterDialog() {
+        final TextView klarerFilterVerdi = view.findViewById(R.id.klarer_filter_verdi);
+        //https://stackoverflow.com/questions/2795300/how-to-implement-a-custom-alertdialog-view
+        LayoutInflater inflater = getLayoutInflater();
+        View dialoglayout = inflater.inflate(R.layout.filter_dialog, null);
+        final EditText text = dialoglayout.findViewById(R.id.filter);
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getContext(),R.style.AlertDialogCustom))
+                .setTitle("Skriv inn ønsket dato")
+                .setMessage("Skriv inn dato uten mellomtegn, f.eks 012018 gir deg alt fra januar 2018")
+                .setView(dialoglayout)
+                .setPositiveButton("Søk", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        filterArstall = text.getText().toString();
+
+                        if (!filterArstall.matches("")) {
+                            klarerFilterVerdi.setText(filterArstall);
+                            fjernFilterKort.setScaleX(0);
+                            fjernFilterKort.setScaleY(0);
+                            fjernFilterKort.setVisibility(View.VISIBLE);
+                            fjernFilterKort.animate()
+                                    .scaleX(1)
+                                    .scaleY(1)
+                                    .setDuration(250)
+                                    .start();
+
+                            initialiserData();
+                        }
+                    }
+                })
+                .setNegativeButton("Avbryt", null)
+                .create();
+        dialog.show();
+    }
 
     private void lagSnackbar(String melding) {
         final Snackbar snackBar = Snackbar.make(view, melding, Snackbar.LENGTH_LONG);
