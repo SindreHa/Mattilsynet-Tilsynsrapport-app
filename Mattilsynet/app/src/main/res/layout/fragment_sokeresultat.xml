@@ -22,6 +22,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:layout_gravity="right">
 
     <androidx.cardview.widget.CardView
@@ -29,7 +30,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="6dp"
         android:foreground="?android:selectableItemBackground"
         app:cardBackgroundColor="@color/colorAccentDark"
         android:visibility="visible">
@@ -68,7 +68,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="right"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="6dp"
         android:clickable="true"
         android:foreground="?android:selectableItemBackground"
         app:cardBackgroundColor="@color/colorCardBackground">

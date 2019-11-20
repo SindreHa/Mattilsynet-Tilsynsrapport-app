@@ -23,15 +23,15 @@
     <fragment
         android:id="@+id/nav_detaljert_visning"
         android:name="com.example.mattilsynet.DetaljertVisning.DetaljertVisningFragment"
-        android:label="Detaljert visning"
-        tools:layout="@layout/fragment_detailed_place_view" >
+        android:label="Detaljer"
+        tools:layout="@layout/fragment_detaljert_visning" >
     </fragment>
 
     <fragment
         android:id="@+id/nav_sokeresultat"
         android:name="com.example.mattilsynet.Sokeresultat.SokeresultatFragment"
         android:label="Søkeresultat"
-        tools:layout="@layout/fragment_search_result" >
+        tools:layout="@layout/fragment_sokeresultat" >
         <action
             android:id="@+id/action_nav_search_result_to_nav_detailed_view"
             app:destination="@id/nav_detaljert_visning"

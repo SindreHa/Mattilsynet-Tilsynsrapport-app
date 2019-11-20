@@ -2,7 +2,6 @@ package com.example.mattilsynet.Sokeresultat;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -22,10 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.OvershootInterpolator;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -60,7 +56,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        this.view = inflater.inflate(R.layout.fragment_search_result, container, false);
+        this.view = inflater.inflate(R.layout.fragment_sokeresultat, container, false);
 
         initialiserView();
 
@@ -69,7 +65,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        initialiserData();
+        if (infoListe.isEmpty()) { initialiserData(); }
     }
 
     @Override
@@ -129,7 +125,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
             @Override
             public void onItemClick(InfoKort card) {
                 Bundle b = new Bundle();
-                b.putString("title", card.getStedAdresse());
+                b.putString("tilsynid", card.getTilsynId());
                 Navigation.findNavController(view).navigate(R.id.action_nav_search_result_to_nav_detailed_view, b);
             }
         });
@@ -139,7 +135,6 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
 
     private void initialiserData() {
         hentData();
-        recyclerAnimasjon();
     }
 
     private void hentData() {
@@ -183,10 +178,11 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
             ingenTreff.setVisibility(View.GONE);
         }
         try{
-            Log.d(LOG_TAG, response);
+            //Log.d(LOG_TAG, response);
             infoListe = InfoKort.createInfoCard(response);
             oppdaterRecyclerView();
         }catch (Exception e){
+            Log.d(LOG_TAG, "Error: " + e);
         }
         infoAdapter.notifyDataSetChanged();
         recyclerAnimasjon();

@@ -1,8 +1,12 @@
-package com.example.mattilsynet.Sokeresultat;
+package com.example.mattilsynet.DetaljertVisning;
 
+import android.os.Bundle;
 import android.util.Log;
 
-import com.example.mattilsynet.R;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,46 +15,38 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.StringJoiner;
 
-public class InfoKort {
+public class DetaljerInfoKort {
 
+    private final String LOG_TAG = DetaljerInfoKort.class.getSimpleName();
 
-    private String tilsynId;
     private String stedNavn;
     private String stedOrgNr;
     private String stedDato;
     private String stedAdresse;
     private String stedPostkode;
     private String stedPoststed;
-    private String stedKarakter;
 
     static final String TABELL_NAVN         = "entries";
-    static final String TILSYN_ID           = "tilsynid";
     static final String STED_NAVN           = "navn";
     static final String STED_ORGNR          = "orgnummer";
     static final String STED_DATO           = "dato";
     static final String STED_ADRESSE        = "adrlinje1";
     static final String STED_POSTKODE       = "postnr";
     static final String STED_POSTSTED       = "poststed";
-    static final String STED_KARAKTER       = "total_karakter";
 
-    public InfoKort() {}
-
-    public InfoKort(JSONObject jsonPost) {
-        this.tilsynId = jsonPost.optString(TILSYN_ID);
+    public DetaljerInfoKort(JSONObject jsonPost) {
         this.stedNavn = jsonPost.optString(STED_NAVN);
         this.stedOrgNr = jsonPost.optString(STED_ORGNR);
         this.stedDato = jsonPost.optString(STED_DATO);
         this.stedAdresse = jsonPost.optString(STED_ADRESSE);
         this.stedPostkode = jsonPost.optString(STED_POSTKODE);
         this.stedPoststed = jsonPost.optString(STED_POSTSTED);
-        this.stedKarakter = jsonPost.optString(STED_KARAKTER);
     }
 
-
-    public static ArrayList<InfoKort> createInfoCard(String jsonPostString)
+    public static ArrayList<DetaljerInfoKort> createInfoCard(String jsonPostString)
             throws JSONException, NullPointerException {
 
-        ArrayList<InfoKort> postListe = new ArrayList<InfoKort>();
+        ArrayList<DetaljerInfoKort> infoKortListe = new ArrayList<DetaljerInfoKort>();
         JSONObject jsonData  = new JSONObject(jsonPostString);
         JSONArray jsonPostTabell = jsonData.optJSONArray("entries");
 
@@ -59,26 +55,22 @@ public class InfoKort {
             for (int i = 0; i < jsonPostTabell.length(); i++) {
                 JSONObject jsonPost = (JSONObject) jsonPostTabell.get(i);
                 // jsonPost må matche verdiene i databasetabellen post
-                InfoKort infoKort = new InfoKort(jsonPost);
-                postListe.add(infoKort);
+                DetaljerInfoKort infoKort = new DetaljerInfoKort(jsonPost);
+                infoKortListe.add(infoKort);
             }
         } else {
             System.out.println("jsonPostTabell null " + TABELL_NAVN);
         }
 
-        return postListe;
-    }
-
-    public String getTilsynId() {
-        return tilsynId;
+        return infoKortListe;
     }
 
     public String getStedNavn() {
-        return this.stedNavn;
+        return stedNavn;
     }
 
     public String getStedOrgNr() {
-        return this.stedOrgNr;
+        return stedOrgNr;
     }
 
     public String getStedDato() {
@@ -91,32 +83,15 @@ public class InfoKort {
     }
 
     public String getStedAdresse() {
-        return this.stedAdresse;
+        return stedAdresse;
     }
 
     public String getStedPostkode() {
-        return this.stedPostkode;
+        return stedPostkode;
     }
 
     public String getStedPoststed() {
-        return this.stedPoststed;
-    }
-
-    public int getStedKarakter() {
-        int bilde = 0;
-        switch (this.stedKarakter) {
-            //https://data.norge.no/data/mattilsynet/smilefjestilsyn-p%C3%A5-serveringssteder
-            case "0": case "1":
-                bilde = R.drawable.smilefjes;
-                break;
-            case "2":
-                bilde = R.drawable.noytralfjes;
-                break;
-            case "3":
-                bilde = R.drawable.surfjes;
-                break;
-        }
-        //Log.d(LOG_TAG, this.stedKarakter + "");
-        return bilde;
+        return stedPoststed;
     }
 }
+

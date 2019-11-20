@@ -47,6 +47,7 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
     class InfoKortHolder extends RecyclerView.ViewHolder {
         //public final ImageView sportImg;
         CardView kontainer;
+        private final TextView tilsynId;
         private final TextView stedNavn;
         private final TextView stedorgNr;
         private final TextView stedDato;
@@ -60,6 +61,7 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
             super(itemView);
             //this.stedNavn = itemView.findViewById(R.id.card_post_title);
             kontainer = itemView.findViewById(R.id.info_kort);
+            this.tilsynId = itemView.findViewById(R.id.sted_tilsynsid);
             this.stedNavn = itemView.findViewById(R.id.info_kort_tittel);
             this.stedorgNr = itemView.findViewById(R.id.info_kort_orgnr);
             this.stedDato = itemView.findViewById(R.id.info_kort_dato);
@@ -83,6 +85,7 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
 
     @Override
     public void onBindViewHolder(@NonNull InfoKortHolder holder, int position) {
+        holder.tilsynId.setText(infoListe.get(position).getTilsynId());
         holder.stedNavn.setText(infoListe.get(position).getStedNavn());
         holder.stedorgNr.setText(infoListe.get(position).getStedOrgNr());
         holder.stedDato.setText(infoListe.get(position).getStedDato());
