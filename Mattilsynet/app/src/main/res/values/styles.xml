@@ -18,8 +18,8 @@
 
     <style name="CustomActivityAnimation" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/slide_inn_hoyre</item>
-        <item name="android:activityOpenExitAnimation">@anim/slide_ut_venstre</item>
-        <item name="android:activityCloseEnterAnimation">@anim/slide_inn_venstre</item>
+        <item name="android:activityOpenExitAnimation">@anim/ingen_anim</item>
+        <item name="android:activityCloseEnterAnimation">@anim/ingen_anim</item>
         <item name="android:activityCloseExitAnimation">@anim/slide_ut_hoyre</item>
     </style>
 

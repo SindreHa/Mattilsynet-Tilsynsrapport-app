@@ -13,18 +13,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -54,6 +51,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
 
     private View view;
     private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout oppdater;
     ImageView fjernFilter;
     CardView fjernFilterKort;
     private InfoListeAdapter infoAdapter;
@@ -145,6 +143,20 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
     }
 
     private void recyclerViewMetoder() {
+
+        //Refresh listener
+        oppdater = view.findViewById(R.id.refresh_sokreresultat);
+        oppdater.setColorSchemeColors(getResources().getColor(R.color.colorAccent), Color.RED, Color.GREEN);
+        oppdater.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.colorPrimary));
+        oppdater.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        initialiserData();
+                    }
+                }
+        );
+
         //Swipe listener
         ItemTouchHelper.SimpleCallback helper = new ItemTouchHelper.SimpleCallback(
                 0,ItemTouchHelper.LEFT)
@@ -218,6 +230,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
     }
 
     private void hentData() {
+        oppdater.setRefreshing(true);
         infoListe.clear();
         final Bundle sokeDataBundle = getArguments();
         String infoliste_URL = ENDPOINT + sokeDataBundle.getString("sokeKriterier") + "&dato=*" + filterArstall;
@@ -246,13 +259,14 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
     @Override
     public void onResponse(String response) {
 
+        oppdater.setRefreshing(false);
         LinearLayout ingenTreff = view.findViewById(R.id.no_search_result);
         String sResponse = response;
         String sok  = ":[]"; //Hvis det ikke er noen treff viser entries tabellen :[]
 
         if (sResponse.toLowerCase().contains(sok.toLowerCase())) {
-            mRecyclerView.setVisibility(View.GONE);
             ingenTreff.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             ingenTreff.setVisibility(View.GONE);

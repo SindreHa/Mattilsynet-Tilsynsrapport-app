@@ -23,8 +23,10 @@ public class Innstillinger extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.settings_layout, new SettingsFragment())
                 .commit();
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
+            actionBar.setTitle("Innstillinger");
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
