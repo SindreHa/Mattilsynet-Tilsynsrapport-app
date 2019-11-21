@@ -50,7 +50,7 @@
         android:id="@+id/nav_instillinger"
         android:name="com.example.mattilsynet.Innstillinger.Innstillinger"
         android:label="Innstillinger"
-        tools:layout="@xml/preferences" >
+        tools:layout="@xml/innstillinger_fragment" >
     </fragment>
 
 </navigation>

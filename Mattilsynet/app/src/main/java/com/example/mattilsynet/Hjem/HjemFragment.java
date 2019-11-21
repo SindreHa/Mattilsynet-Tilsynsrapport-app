@@ -2,7 +2,9 @@ package com.example.mattilsynet.Hjem;
 
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -19,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.mattilsynet.Innstillinger.Innstillinger;
 import com.example.mattilsynet.R;
 
 public class HjemFragment extends Fragment {
@@ -56,7 +59,7 @@ public class HjemFragment extends Fragment {
         int id = item.getItemId();
 
         if (id == R.id.action_instillinger) {
-            Navigation.findNavController(view).navigate(R.id.nav_instillinger);
+            startActivity(new Intent(getActivity(), Innstillinger.class));
         }
 
         return super.onOptionsItemSelected(item);
