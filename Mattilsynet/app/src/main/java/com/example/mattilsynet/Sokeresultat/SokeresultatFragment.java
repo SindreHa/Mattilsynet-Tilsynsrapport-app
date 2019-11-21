@@ -132,9 +132,16 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
     private void oppdaterRecyclerView() {
         infoAdapter = new InfoListeAdapter(getContext(), infoListe, new InfoListeAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(InfoKort card) {
+            public void onItemClick(InfoKort infoKort) {
                 Bundle b = new Bundle();
-                b.putString("tilsynid", card.getTilsynId());
+                b.putString("tilsynid", infoKort.getTilsynId());
+                b.putString("stedNavn", infoKort.getStedNavn());
+                b.putString("stedOrgNr", infoKort.getStedOrgNr());
+                b.putString("rapportDato", infoKort.getStedDato());
+                b.putString("stedKarakter", infoKort.getStedKarakter());
+                b.putString("stedAdresse", infoKort.getStedAdresse());
+                b.putString("stedPostKode", infoKort.getStedPostkode());
+                b.putString("stedPostSted", infoKort.getStedPoststed());
                 Navigation.findNavController(view).navigate(R.id.action_nav_search_result_to_nav_detailed_view, b);
             }
         });
@@ -183,14 +190,17 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
                             .setPositiveButton("Fjern", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
+                                    //Hvis bruker trykker Fjern
                                     infoListe.remove(position);
                                     infoAdapter.notifyItemRemoved(position);
                                     snackBar.show();
                                 }
                             })
-                            .setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+                            .setNegativeButton("Avbryt", null) //Dismiss gjør samme som Avbryt knappen
+                            .setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
+                                public void onDismiss(DialogInterface dialogInterface) {
+                                    //Hvis bruker trykker utenfor dialogvindu for å fjerne det eller avbryt knapp
                                     infoAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
                                 }
                             })

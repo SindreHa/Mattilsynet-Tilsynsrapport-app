@@ -45,6 +45,7 @@ public class DetaljertVisningFragment extends Fragment implements
         this.view = inflater.inflate(R.layout.fragment_detaljert_visning, container, false);
 
         hentinfoKortData();
+        settInnInfoData();
 
         return view;
     }
@@ -85,20 +86,23 @@ public class DetaljertVisningFragment extends Fragment implements
         in.setDuration(200);
         //stedNavn.startAnimation(in);
 
+        final Bundle infoKortBundle = getArguments();
+        Log.d(LOG_TAG, "navn= " + infoKortBundle.getString("stedNavn"));
+
         TextView stedNavn = view.findViewById(R.id.detaljer_navn);
-        stedNavn.setText(infoListe.get(0).getStedNavn());
+        stedNavn.setText(infoKortBundle.getString("stedNavn"));
         TextView stedOrgNr = view.findViewById(R.id.detaljer_orgnr);
-        stedOrgNr.setText(infoListe.get(0).getStedOrgNr());
+        stedOrgNr.setText(infoKortBundle.getString("stedOrgNr"));
         TextView rapportDato = view.findViewById(R.id.detaljer_dato);
-        rapportDato.setText(infoListe.get(0).getStedDato());
+        rapportDato.setText(infoKortBundle.getString("rapportDato"));
         TextView stedTotKarakter = view.findViewById(R.id.detaljer_tot_karakter);
-        stedTotKarakter.setText(infoListe.get(0).getStedTotKarakter());
+        stedTotKarakter.setText(infoKortBundle.getString("stedKarakter"));
         TextView stedAdresse = view.findViewById(R.id.detaljer_adresse);
-        stedAdresse.setText(infoListe.get(0).getStedAdresse());
+        stedAdresse.setText(infoKortBundle.getString("stedAdresse"));
         TextView stedPostNr = view.findViewById(R.id.detaljer_postnr);
-        stedPostNr.setText(infoListe.get(0).getStedPostkode());
+        stedPostNr.setText(infoKortBundle.getString("stedPostKode"));
         TextView stedPoststed = view.findViewById(R.id.detaljer_poststed);
-        stedPoststed.setText(infoListe.get(0).getStedPoststed());
+        stedPoststed.setText(infoKortBundle.getString("stedPostSted"));
 
     }
 

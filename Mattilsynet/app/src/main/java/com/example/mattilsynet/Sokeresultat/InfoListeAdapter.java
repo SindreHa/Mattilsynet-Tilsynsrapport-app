@@ -92,7 +92,7 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
         holder.stedAdresse.setText(infoListe.get(position).getStedAdresse());
         holder.stedPostkode.setText(infoListe.get(position).getStedPostkode());
         holder.stedPoststed.setText(infoListe.get(position).getStedPoststed());
-        holder.stedKarakter.setImageResource(infoListe.get(position).getStedKarakter());
+        holder.stedKarakter.setImageResource(infoListe.get(position).getStedKarakterBilde());
         holder.bind(infoListe.get(position), lytter);
         //listeScrollAnimasjon(holder.itemView, position);
     }

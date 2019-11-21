@@ -102,7 +102,11 @@ public class InfoKort {
         return this.stedPoststed;
     }
 
-    public int getStedKarakter() {
+    public String getStedKarakter() {
+        return stedKarakter;
+    }
+
+    public int getStedKarakterBilde() {
         int bilde = 0;
         switch (this.stedKarakter) {
             //https://data.norge.no/data/mattilsynet/smilefjestilsyn-p%C3%A5-serveringssteder
