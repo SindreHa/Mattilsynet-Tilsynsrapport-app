@@ -18,6 +18,11 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_nav_hjem_to_nav_instillinger"
+            app:destination="@id/nav_instillinger"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
     </fragment>
 
     <fragment
@@ -43,8 +48,8 @@
 
     <fragment
         android:id="@+id/nav_instillinger"
-        android:name="com.example.mattilsynet.Instillinger.Instillinger"
-        android:label="Instillinger"
+        android:name="com.example.mattilsynet.Innstillinger.Innstillinger"
+        android:label="Innstillinger"
         tools:layout="@xml/preferences" >
     </fragment>
 

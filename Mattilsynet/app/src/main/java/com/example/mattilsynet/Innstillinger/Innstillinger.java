@@ -1,4 +1,4 @@
-package com.example.mattilsynet.Instillinger;
+package com.example.mattilsynet.Innstillinger;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.example.mattilsynet.R;
 import com.google.android.material.snackbar.Snackbar;
 
-public class Instillinger extends PreferenceFragmentCompat {
+public class Innstillinger extends PreferenceFragmentCompat {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -36,7 +36,7 @@ public class Instillinger extends PreferenceFragmentCompat {
 
                 Intent i = new Intent(Intent.ACTION_SEND);
                 i.setType("message/rfc822");
-                i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"mattilsynet@gmail.com"});
+                i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"mattilsynet@epost.no"});
                 i.putExtra(Intent.EXTRA_SUBJECT, "Tilbakemelding for app");
                 i.putExtra(Intent.EXTRA_TEXT   , "AppVersjon: " + getString(R.string.versionName));
                 try {

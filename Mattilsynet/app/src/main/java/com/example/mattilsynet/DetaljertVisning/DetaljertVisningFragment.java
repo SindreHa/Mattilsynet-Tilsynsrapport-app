@@ -29,11 +29,13 @@ import java.util.ArrayList;
 public class DetaljertVisningFragment extends Fragment implements
         Response.Listener<String>, Response.ErrorListener  {
 
-
+    private String tilsynId;
+    private View view;
+    private boolean hentInfoFerdig, hentKravFerdig;
     private ArrayList<DetaljerInfoKort> infoListe = new ArrayList<>();
     private final String LOG_TAG = DetaljerInfoKort.class.getSimpleName();
-    String tilsynId;
-    View view;
+    public final static String TILSYN_URL = "https://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn?";
+    public final static String KRAVPUNKTER_URL = "https://hotell.difi.no/api/json/mattilsynet/smilefjes/kravpunkter?";
 
     public DetaljertVisningFragment() {
     }
@@ -52,8 +54,7 @@ public class DetaljertVisningFragment extends Fragment implements
         if (arguments != null) {
             tilsynId = arguments.getString("tilsynid");
         }
-        String infoliste_URL = "https://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn?tilsynid=" + tilsynId;
-        //Log.d(LOG_TAG, infoliste_URL);
+        String infoliste_URL = TILSYN_URL + tilsynId;
         if (isOnline()){
             RequestQueue queue = Volley.newRequestQueue(getContext());
             StringRequest stringRequest =
@@ -61,32 +62,43 @@ public class DetaljertVisningFragment extends Fragment implements
             queue.add(stringRequest);
         }else{
         }
+    }
 
+    private void hentKravpunkterData() {
+        final Bundle arguments = getArguments();
+        if (arguments != null) {
+            tilsynId = arguments.getString("tilsynid");
+        }
+        String kravpunkterURL = KRAVPUNKTER_URL + tilsynId;
+        if (isOnline()){
+            RequestQueue queue = Volley.newRequestQueue(getContext());
+            StringRequest stringRequest =
+                    new StringRequest(Request.Method.GET, kravpunkterURL, this, this);
+            queue.add(stringRequest);
+        }else{
+        }
     }
 
     private void settInnInfoData() {
 
         final Animation in = new AlphaAnimation(0.0f, 1.0f);
         in.setDuration(200);
+        //stedNavn.startAnimation(in);
 
         TextView stedNavn = view.findViewById(R.id.detaljer_navn);
         stedNavn.setText(infoListe.get(0).getStedNavn());
-        //stedNavn.startAnimation(in);
         TextView stedOrgNr = view.findViewById(R.id.detaljer_orgnr);
         stedOrgNr.setText(infoListe.get(0).getStedOrgNr());
-        //stedOrgNr.startAnimation(in);
         TextView rapportDato = view.findViewById(R.id.detaljer_dato);
         rapportDato.setText(infoListe.get(0).getStedDato());
-        //stedOrgNr.startAnimation(in);
+        TextView stedTotKarakter = view.findViewById(R.id.detaljer_tot_karakter);
+        stedTotKarakter.setText(infoListe.get(0).getStedTotKarakter());
         TextView stedAdresse = view.findViewById(R.id.detaljer_adresse);
         stedAdresse.setText(infoListe.get(0).getStedAdresse());
-        //stedOrgNr.startAnimation(in);
         TextView stedPostNr = view.findViewById(R.id.detaljer_postnr);
         stedPostNr.setText(infoListe.get(0).getStedPostkode());
-        //stedOrgNr.startAnimation(in);
         TextView stedPoststed = view.findViewById(R.id.detaljer_poststed);
         stedPoststed.setText(infoListe.get(0).getStedPoststed());
-        //stedOrgNr.startAnimation(in);
 
     }
 
@@ -105,8 +117,12 @@ public class DetaljertVisningFragment extends Fragment implements
     @Override
     public void onResponse(String response) {
         try{
-            infoListe = DetaljerInfoKort.createInfoCard(response);
-            settInnInfoData();
+            if (hentInfoFerdig) {
+                //infoListe = DetaljerInfoKort.createInfoCard(response);
+                settInnInfoData();
+            } else {
+                //Kravpunkter
+            }
         }catch (Exception e){
             Log.d(LOG_TAG, "Error: " + e);
         }

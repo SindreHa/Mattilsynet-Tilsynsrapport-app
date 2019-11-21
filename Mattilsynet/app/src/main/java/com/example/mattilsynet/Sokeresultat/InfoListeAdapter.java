@@ -94,7 +94,7 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
         holder.stedPoststed.setText(infoListe.get(position).getStedPoststed());
         holder.stedKarakter.setImageResource(infoListe.get(position).getStedKarakter());
         holder.bind(infoListe.get(position), lytter);
-        listeScrollAnimasjon(holder.itemView, position);
+        //listeScrollAnimasjon(holder.itemView, position);
     }
 
     //Animasjon som fader inn infokort når man scroller
@@ -111,6 +111,15 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
     @Override
     public int getItemCount() {
         return infoListe.size();
+    }
+
+    public void restoreInfoKort(InfoKort kort, int position) {
+        infoListe.add(position, kort);
+        notifyItemInserted(position);
+    }
+
+    public ArrayList<InfoKort> getInfoKort() {
+        return infoListe;
     }
 
 }

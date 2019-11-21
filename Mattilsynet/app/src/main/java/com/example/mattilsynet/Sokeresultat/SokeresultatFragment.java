@@ -3,6 +3,8 @@ package com.example.mattilsynet.Sokeresultat;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -11,13 +13,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -39,6 +46,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
+
 
 public class SokeresultatFragment extends Fragment implements InfoListeAdapter.OnItemClickListener,
         Response.Listener<String>, Response.ErrorListener  {
@@ -58,6 +67,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
 
         this.view = inflater.inflate(R.layout.fragment_sokeresultat, container, false);
 
+        setHasOptionsMenu(false);
         initialiserView();
 
         return view;
@@ -118,6 +128,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
     private void recyclerViewInit() {
         mRecyclerView = view.findViewById(R.id.recyclerView_sokeresultat);
         oppdaterRecyclerView();
+        recyclerViewMetoder();
     }
 
     private void oppdaterRecyclerView() {
@@ -131,6 +142,75 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
         });
         mRecyclerView.setAdapter(infoAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    }
+
+    private void recyclerViewMetoder() {
+        //Swipe listener
+        ItemTouchHelper.SimpleCallback helper = new ItemTouchHelper.SimpleCallback(
+                0,ItemTouchHelper.LEFT)
+        {
+            @Override
+            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+
+                if (direction == ItemTouchHelper.LEFT) {
+                    final InfoKort kort = infoAdapter.getInfoKort().get(viewHolder.getAdapterPosition());
+                    final int position = viewHolder.getAdapterPosition();
+
+                    final Snackbar snackBar = Snackbar.make(getView(), "Sted fjernet fra søk", Snackbar.LENGTH_LONG);
+                    snackBar.setAction("Angre", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //Her kan man legge inn angrefunksjon på sletting av innlegg
+                            snackBar.dismiss();
+                            infoAdapter.restoreInfoKort(kort, position);
+                        }
+                    });
+
+                    AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getContext(),R.style.AlertDialogCustom))
+                            .setTitle("Fjerne sted fra søk?")
+                            .setPositiveButton("Fjern", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    infoListe.remove(position);
+                                    infoAdapter.notifyItemRemoved(position);
+                                    snackBar.show();
+                                }
+                            })
+                            .setNegativeButton("Avbryt", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    infoAdapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                                }
+                            })
+                            .create();
+                    dialog.show();
+                }
+            }
+
+            /*
+             * Bruker her et bibliotek fra github som sparer mye koding for å sette opp tekst og ikon bak
+             * kort på swipe, som da her "Fjern fra søk" med et søppelbøtte ikon
+             * https://github.com/xabaras/RecyclerViewSwipeDecorator
+             */
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                        .addSwipeLeftActionIcon(R.drawable.ic_delete)
+                        .setSwipeLeftActionIconTint(Color.RED)
+                        .setSwipeLeftLabelTextSize(2, 20)
+                        .addSwipeLeftLabel("Fjern fra søk")
+                        .setSwipeLeftLabelColor(Color.WHITE)
+                        .create()
+                        .decorate();
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) { return false; }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(helper);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
     private void initialiserData() {

@@ -8,4 +8,9 @@
     <string name="serveringssted_poststed">Serveringssted poststed</string>
     <string name="sok">Søk</string>
     <string name="hjemmeside_header">Søk opp tilsynsrapport</string>
+    <string name="kravpunkter">Kravpunkter</string>
+    <string name="adresse">Adresse</string>
+    <string name="total_karakter">Total karakter</string>
+    <string name="dato_for_rapport">Dato for rapport</string>
+    <string name="organisasjonsnummer">Organisasjonsnummer</string>
 </resources>
