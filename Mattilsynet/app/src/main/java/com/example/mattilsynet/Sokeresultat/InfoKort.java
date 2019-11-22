@@ -47,7 +47,7 @@ public class InfoKort {
     }
 
 
-    public static ArrayList<InfoKort> createInfoCard(String jsonPostString)
+    public static ArrayList<InfoKort> lagInfoKort(String jsonPostString)
             throws JSONException, NullPointerException {
 
         ArrayList<InfoKort> postListe = new ArrayList<InfoKort>();

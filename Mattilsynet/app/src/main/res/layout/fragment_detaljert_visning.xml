@@ -143,6 +143,8 @@
         android:layout_marginEnd="@dimen/vertical_card_margin_horizontal"
         android:layout_marginTop="@dimen/vertical_card_margin_vertical">
         <androidx.recyclerview.widget.RecyclerView
+            android:scrollbars="vertical"
+            android:fadingEdge="vertical"
             android:id="@+id/detaljer_kravpunkt_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

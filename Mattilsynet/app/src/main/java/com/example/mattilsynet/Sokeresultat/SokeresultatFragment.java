@@ -31,7 +31,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -53,20 +52,19 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
     private View view;
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout oppdater;
-    ImageView fjernFilter;
-    CardView fjernFilterKort;
+    private ImageView fjernFilter;
+    private CardView fjernFilterKort;
     private InfoListeAdapter infoAdapter;
-    String filterArstall = "";
+    private String filterArstall = "";
     private ArrayList<InfoKort> infoListe = new ArrayList<>();
     private final String LOG_TAG = SokeresultatFragment.class.getSimpleName();
-    public final static String ENDPOINT = "https://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn?";
+    private final static String TILSYN_URL = "https://hotell.difi.no/api/json/mattilsynet/smilefjes/tilsyn?";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         this.view = inflater.inflate(R.layout.fragment_sokeresultat, container, false);
 
-        setHasOptionsMenu(false);
         initialiserView();
 
         return view;
@@ -74,7 +72,15 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        if (infoListe.isEmpty()) { initialiserData(); }
+
+        /*
+        * Hent data kun hvis det ikke er data i ArrayList, trengs
+        * for når bruker går tilbake fra detaljert visning
+         */
+        if (infoListe.isEmpty()) {
+            initialiserData();
+        }
+
     }
 
     @Override
@@ -91,49 +97,28 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
         }
     }
 
+    /*
+    * Metoder for grafiske elementer
+    */
+
     private void initialiserView() {
         recyclerViewInit();
         settKlikkLyttere();
     }
 
-    private void settKlikkLyttere() {
-        CardView knapp = view.findViewById(R.id.filter_sok);
-        knapp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                filterDialog();
-            }
-        });
-
-        fjernFilter = view.findViewById(R.id.klarer_filter);
-        fjernFilterKort = view.findViewById(R.id.klarer_filter_kort);
-        fjernFilterKort.setVisibility(View.INVISIBLE);
-
-        fjernFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fjernFilterKort.animate()
-                        .scaleX(0)
-                        .scaleY(0)
-                        .setDuration(250)
-                        .start();
-
-                filterArstall = "";
-                initialiserData();
-            }
-        });
-    }
-
+    //Setter opp recyclerview som viser søkeresultater
     private void recyclerViewInit() {
         mRecyclerView = view.findViewById(R.id.recyclerView_sokeresultat);
         oppdaterRecyclerView();
-        recyclerViewMetoder();
+        recyclerViewFunksjoner();
     }
 
+    //Setter adapter på recyclerview som holder all data
     private void oppdaterRecyclerView() {
         infoAdapter = new InfoListeAdapter(getContext(), infoListe, new InfoListeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(InfoKort infoKort) {
+                //Lag bundle med all data fra kort og send til detaljert visning
                 Bundle b = new Bundle();
                 b.putString("tilsynid", infoKort.getTilsynId());
                 b.putString("stedNavn", infoKort.getStedNavn());
@@ -150,9 +135,45 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
-    private void recyclerViewMetoder() {
+    //Setter opp diverse klikk lyttere i recyclerview som klikk på kort
+    private void settKlikkLyttere() {
+        //Knapp for filtrering på år
+        CardView knapp = view.findViewById(R.id.filter_sok);
+        knapp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Åpne dialog for å skrive inn datofiltrering
+                filterDialog();
+            }
+        });
 
-        //Refresh listener
+        //Rød knapp med aktiv datofiltrering, kan krysses ut for å fjerne filter
+        fjernFilter = view.findViewById(R.id.klarer_filter);
+        fjernFilterKort = view.findViewById(R.id.klarer_filter_kort);
+        fjernFilterKort.setVisibility(View.INVISIBLE);
+        fjernFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Animasjon for å skjule knappen
+                fjernFilterKort.animate()
+                        .scaleX(0)
+                        .scaleY(0)
+                        .setDuration(250)
+                        .start();
+
+                //Setter filter til null for neste volleyinnhenting som ikke skal filtrere
+                filterArstall = "";
+                oppdater.setRefreshing(true);
+                //Kjører animasjon ut, som avslutter med å kjøre initialiserData()
+                recyclerAnimasjonUt();
+            }
+        });
+    }
+
+    //Setter opp funksjoner i recyclerview som swipe av kort og dra ned for å oppdatere data
+    private void recyclerViewFunksjoner() {
+
+        //Lytter for oppdatering, bruker kan dra ned for å oppdatere
         oppdater = view.findViewById(R.id.refresh_sokreresultat);
         oppdater.setColorSchemeColors(Color.RED, Color.GREEN, Color.CYAN);
         oppdater.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.colorPrimary));
@@ -160,32 +181,37 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        postAnimationOut();
+                        //Kjører animasjon ut, som avslutter med å kjøre initialiserData()
+                        recyclerAnimasjonUt();
                     }
                 }
         );
 
-        //Swipe listener
+        //Lytter for swipe av kort
         ItemTouchHelper.SimpleCallback helper = new ItemTouchHelper.SimpleCallback(
                 0,ItemTouchHelper.LEFT)
         {
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
 
+                //Kort kan kun swipes til venstre
                 if (direction == ItemTouchHelper.LEFT) {
+                    //Lagrer instans av gjeldende kort som brukes til å gjenoprette kortet
                     final InfoKort kort = infoAdapter.getInfoKort().get(viewHolder.getAdapterPosition());
+                    //Lagring av posisjon i ArrayListen
                     final int position = viewHolder.getAdapterPosition();
-
+                    //Snackbar som vises etter sletting som gir mulighet til å angre sletting
                     final Snackbar snackBar = Snackbar.make(getView(), "Sted fjernet fra søk", Snackbar.LENGTH_LONG);
                     snackBar.setAction("Angre", new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            //Her kan man legge inn angrefunksjon på sletting av innlegg
-                            snackBar.dismiss();
+                            //Kjører gjenoppretting av kort med instans lagret tidligere
                             infoAdapter.restoreInfoKort(kort, position);
+                            snackBar.dismiss();
                         }
                     });
 
+                    //Dialogvindu som vises etter swipe med som spør om bruker vil fjerne kortet
                     AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getContext(),R.style.AlertDialogCustom))
                             .setTitle("Fjerne sted fra søk?")
                             .setPositiveButton("Fjern", new DialogInterface.OnClickListener() {
@@ -236,70 +262,65 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
         itemTouchHelper.attachToRecyclerView(mRecyclerView);
     }
 
-    private void initialiserData() {
-        hentData();
+    //Funksjon som viser en popup dialog for filtrering
+    private void filterDialog() {
+        final TextView klarerFilterVerdi = view.findViewById(R.id.klarer_filter_verdi);
+        /*
+        * Dialogvindu ved trykk på "Filter" knapp, har her brukt egendefinertlayout med hjelp av StackOverflow
+        * https://stackoverflow.com/questions/2795300/how-to-implement-a-custom-alertdialog-view
+        */
+        LayoutInflater inflater = getLayoutInflater();
+        View dialoglayout = inflater.inflate(R.layout.filter_dialog_edittext, null); //Edittext layout i dialog
+        final EditText text = dialoglayout.findViewById(R.id.filter); //tekstfelt bruker skriver inn i
+        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getContext(),R.style.AlertDialogCustom))
+                .setTitle("Skriv inn ønsket dato")
+                .setMessage("Skriv inn dato uten mellomtegn, f.eks 012018 gir deg alt fra januar 2018")
+                .setView(dialoglayout)
+                .setPositiveButton("Søk", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //Setter filterArstall til brukes sin input
+                        filterArstall = text.getText().toString();
+
+                        //Sjekker om bruker har skrivd inn data, hvis ikke skjer ingenting
+                        if (!filterArstall.matches("")) {
+                            klarerFilterVerdi.setText(filterArstall);
+                            //Animasjon som gjør at aktivt filter "popper ut"
+                            fjernFilterKort.setScaleX(0);
+                            fjernFilterKort.setScaleY(0);
+                            fjernFilterKort.setVisibility(View.VISIBLE);
+                            fjernFilterKort.animate()
+                                    .scaleX(1)
+                                    .scaleY(1)
+                                    .setDuration(250)
+                                    .start();
+
+                            oppdater.setRefreshing(true);
+                            //Kjører animasjon ut, som avslutter med å kjøre initialiserData()
+                            recyclerAnimasjonUt();
+                        }
+                    }
+                })
+                .setNegativeButton("Avbryt", null)
+                .create();
+        dialog.show();
+        text.requestFocus();
     }
 
-    private void hentData() {
-        oppdater.setRefreshing(true);
-        infoListe.clear();
-        final Bundle sokeDataBundle = getArguments();
-        String infoliste_URL = ENDPOINT + sokeDataBundle.getString("sokeKriterier") + "&dato=*" + filterArstall;
-        //Log.d(LOG_TAG, infoliste_URL);
-        if (isOnline()){
-            RequestQueue queue = Volley.newRequestQueue(getContext());
-            StringRequest stringRequest =
-                    new StringRequest(Request.Method.GET, infoliste_URL, this, this);
-            queue.add(stringRequest);
-        }else{
-            lagSnackbar("Ingen nettverkstilgang. Kan ikke laste varer.");
-        }
-
-        /*infoListe.add(new InfoKort(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 1", "6242", "Stedsnavn", R.drawable.smilefjes));
-        infoListe.add(new InfoKort(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 2", "6242", "Stedsnavn", R.drawable.noytralfjes));
-        infoListe.add(new InfoKort(getString(R.string.placeholder_title), "Org nr: 5231761235", "Gatenavn 3", "6242", "Stedsnavn", R.drawable.noytralfjes));*/
+    //Enkel funksjon som viser en snackbar med melding som parameter
+    private void lagSnackbar(String melding) {
+        final Snackbar snackBar = Snackbar.make(view, melding, Snackbar.LENGTH_LONG);
+        snackBar.setAction("Ok", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackBar.dismiss();
+            }
+        });
+        snackBar.show();
     }
 
-    // Sjekker om nettverkstilgang
-    private boolean isOnline() {
-        ConnectivityManager conMgr = (ConnectivityManager) getActivity().getSystemService(Activity.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = conMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
-    }
-
-    @Override
-    public void onResponse(String response) {
-
-        oppdater.setRefreshing(false);
-        LinearLayout ingenTreff = view.findViewById(R.id.no_search_result);
-        String sResponse = response;
-        String sok  = ":[]"; //Hvis det ikke er noen treff viser entries tabellen :[]
-
-        if (sResponse.toLowerCase().contains(sok.toLowerCase())) {
-            ingenTreff.setVisibility(View.VISIBLE);
-            mRecyclerView.setVisibility(View.GONE);
-        } else {
-            mRecyclerView.setVisibility(View.VISIBLE);
-            ingenTreff.setVisibility(View.GONE);
-        }
-        try{
-            //Log.d(LOG_TAG, response);
-            infoListe = InfoKort.createInfoCard(response);
-            oppdaterRecyclerView();
-        }catch (Exception e){
-            Log.d(LOG_TAG, "Error: " + e);
-        }
-        infoAdapter.notifyDataSetChanged();
-        recyclerAnimasjon();
-    }
-
-    @Override
-    public void onErrorResponse(VolleyError error) {
-        Toast.makeText(getContext(), error.getMessage(),
-                Toast.LENGTH_SHORT).show();
-    }
-
-    private void recyclerAnimasjon() {
+    //Animasjon som får kortene til å skli inn fra bunn
+    private void recyclerAnimasjonInn() {
         //https://stackoverflow.com/questions/38909542/how-to-animate-recyclerview-items-when-adapter-is-initialized-in-order
         mRecyclerView.getViewTreeObserver().addOnPreDrawListener(
                 new ViewTreeObserver.OnPreDrawListener() {
@@ -307,18 +328,20 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
                     @Override
                     public boolean onPreDraw() {
                         mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        int tid = 1000;
                         for (int i = 0; i < mRecyclerView.getChildCount(); i++) {
+                            /*
+                            * Animasjon som animerer hvert kort synlig i view.
+                            * pr loop økes delay for å gi en mykere animasjon
+                             */
                             View v = mRecyclerView.getChildAt(i);
                             View reCycler = mRecyclerView;
-                            v.setAlpha(1.0f);
+                            //Starter med å sette posisjon til bunn av skjermen
                             v.setTranslationY(reCycler.getHeight());
                             v.animate()
-                                    .translationY(0)
-                                    .setInterpolator(new DecelerateInterpolator(2))
-                                    .alpha(1.0f)
-                                    .setDuration(800)
-                                    .setStartDelay(i * 130)
+                                    .translationY(0) //Sender kort til toppen av recyclerView eller under neste kort
+                                    .setInterpolator(new DecelerateInterpolator(2)) //Animasjon timing
+                                    .setDuration(800) //Lengde i ms på animasjon pr kort
+                                    .setStartDelay(i * 130) //Tid før neste kort skal animeres
                                     .start();
                         }
                         return true;
@@ -327,27 +350,26 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
 
     }
 
-
-    private void postAnimationOut(){
-        //Deaktiver scrolling for å unngå krasj som skjer hvor man scroller samtidig som animasjon
-        //mRecyclerView.setLayoutFrozen(true);
+    //Animasjon som får kortene til å skli ut til siden
+    private void recyclerAnimasjonUt(){
         mRecyclerView.getViewTreeObserver().addOnPreDrawListener(
                 new ViewTreeObserver.OnPreDrawListener() {
                     @Override
                     public boolean onPreDraw() {
                         mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        int duration = 450;
                         for (int i = 0; i < mRecyclerView.getChildCount(); i++) {
-                            duration = duration + 100;
+                            /*
+                             * Animasjon som fader ut hvert kort synlig i view.
+                             * pr loop økes delay for å gi en mykere animasjon
+                             */
                             View v = mRecyclerView.getChildAt(i);
                             View pRecycler = mRecyclerView;
-                            v.setTranslationX(0);
                             v.animate()
-                                    .translationX(pRecycler.getWidth())
-                                    .setInterpolator(new AccelerateDecelerateInterpolator())
-                                    .alpha(-1f)
-                                    .setDuration(600)
-                                    .setStartDelay(i * 80)
+                                    .translationX(pRecycler.getWidth()) //Setter posisjon helt til høyre i view
+                                    .setInterpolator(new AccelerateDecelerateInterpolator()) //Animasjon timing
+                                    .alpha(-1f) //Kort blir totalt gjennomsiktig halvveis inn i animasjonen
+                                    .setDuration(600) //Lengde i ms på animasjon pr kort
+                                    .setStartDelay(i * 80) //Tid før neste kort skal animeres
                                     .start();
                         }
                         return true;
@@ -363,53 +385,75 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
         }, 700);
     }
 
+    /*
+     * Metoder for innhenting av data
+     */
+
+    private void initialiserData() {
+        hentData();
+    }
+
+    //Funksjon som henter inn data med volley
+    private void hentData() {
+        //Setter oppdaterings sirkel til å vises så bruker ser at innhenting pågår
+        oppdater.setRefreshing(true);
+        //Tømmer gammel data fra ArrayListe
+        infoListe.clear();
+        //Henter ut bundle hvor søkekriteriene fra hjemskjerm ligger
+        final Bundle sokeDataBundle = getArguments();
+        String infoliste_URL = TILSYN_URL + sokeDataBundle.getString("sokeKriterier") + "&dato=*" + filterArstall;
+        if (isOnline()){
+            //Lager ny volleyrequest med opprettet url
+            RequestQueue queue = Volley.newRequestQueue(getContext());
+            StringRequest stringRequest =
+                    new StringRequest(Request.Method.GET, infoliste_URL, this, this);
+            queue.add(stringRequest);
+        }else {
+            oppdater.setRefreshing(false);
+            lagSnackbar("Ingen nettverkstilgang");
+        }
+     }
+
+    //Sjekker nettverkstilgang
+    private boolean isOnline() {
+        ConnectivityManager conMgr = (ConnectivityManager) getActivity().getSystemService(Activity.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = conMgr.getActiveNetworkInfo();
+        return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    //Når volley suksessfult får response fra url
+    @Override
+    public void onResponse(String response) {
+
+        oppdater.setRefreshing(false);
+        LinearLayout ingenTreff = view.findViewById(R.id.no_search_result);
+        String sok  = ":[]"; //Hvis det ikke er noen treff viser entries tabellen :[]
+
+        if (response.toLowerCase().contains(sok.toLowerCase())) {
+            ingenTreff.setVisibility(View.VISIBLE);
+            mRecyclerView.setVisibility(View.GONE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            ingenTreff.setVisibility(View.GONE);
+        }
+        try{
+            //Log.d(LOG_TAG, response);
+            infoListe = InfoKort.lagInfoKort(response);
+            oppdaterRecyclerView();
+        }catch (Exception e){
+            Log.d(LOG_TAG, "Error: " + e);
+        }
+        infoAdapter.notifyDataSetChanged();
+        recyclerAnimasjonInn();
+    }
+
+    //Når volley får en error på response
+    @Override
+    public void onErrorResponse(VolleyError error) {
+        lagSnackbar("Error med innlasting av data");
+        Log.d(LOG_TAG, "onErrorResponse: " + error.getMessage());
+    }
+
     @Override
     public void onItemClick(InfoKort card) { }
-
-    public void filterDialog() {
-        final TextView klarerFilterVerdi = view.findViewById(R.id.klarer_filter_verdi);
-        //https://stackoverflow.com/questions/2795300/how-to-implement-a-custom-alertdialog-view
-        LayoutInflater inflater = getLayoutInflater();
-        View dialoglayout = inflater.inflate(R.layout.filter_dialog, null);
-        final EditText text = dialoglayout.findViewById(R.id.filter);
-        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getContext(),R.style.AlertDialogCustom))
-                .setTitle("Skriv inn ønsket dato")
-                .setMessage("Skriv inn dato uten mellomtegn, f.eks 012018 gir deg alt fra januar 2018")
-                .setView(dialoglayout)
-                .setPositiveButton("Søk", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        filterArstall = text.getText().toString();
-
-                        if (!filterArstall.matches("")) {
-                            klarerFilterVerdi.setText(filterArstall);
-                            fjernFilterKort.setScaleX(0);
-                            fjernFilterKort.setScaleY(0);
-                            fjernFilterKort.setVisibility(View.VISIBLE);
-                            fjernFilterKort.animate()
-                                    .scaleX(1)
-                                    .scaleY(1)
-                                    .setDuration(250)
-                                    .start();
-
-                            initialiserData();
-                        }
-                    }
-                })
-                .setNegativeButton("Avbryt", null)
-                .create();
-        dialog.show();
-        text.requestFocus();
-    }
-
-    private void lagSnackbar(String melding) {
-        final Snackbar snackBar = Snackbar.make(view, melding, Snackbar.LENGTH_LONG);
-        snackBar.setAction("Ok", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                snackBar.dismiss();
-            }
-        });
-        snackBar.show();
-    }
 }
