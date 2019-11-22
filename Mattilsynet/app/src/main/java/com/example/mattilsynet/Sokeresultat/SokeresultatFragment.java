@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -153,13 +154,13 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
 
         //Refresh listener
         oppdater = view.findViewById(R.id.refresh_sokreresultat);
-        oppdater.setColorSchemeColors(getResources().getColor(R.color.colorAccent), Color.RED, Color.GREEN);
+        oppdater.setColorSchemeColors(Color.RED, Color.GREEN, Color.CYAN);
         oppdater.setProgressBackgroundColorSchemeColor(getResources().getColor(R.color.colorPrimary));
         oppdater.setOnRefreshListener(
                 new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
                     public void onRefresh() {
-                        initialiserData();
+                        postAnimationOut();
                     }
                 }
         );
@@ -306,24 +307,60 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
                     @Override
                     public boolean onPreDraw() {
                         mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        int tid = 450;
+                        int tid = 1000;
                         for (int i = 0; i < mRecyclerView.getChildCount(); i++) {
-                            tid = tid + 100;
                             View v = mRecyclerView.getChildAt(i);
                             View reCycler = mRecyclerView;
                             v.setAlpha(1.0f);
                             v.setTranslationY(reCycler.getHeight());
                             v.animate()
                                     .translationY(0)
-                                    .setInterpolator(new AccelerateDecelerateInterpolator())
+                                    .setInterpolator(new DecelerateInterpolator(2))
                                     .alpha(1.0f)
-                                    .setDuration(tid)
-                                    .setStartDelay(i * 50)
+                                    .setDuration(800)
+                                    .setStartDelay(i * 130)
                                     .start();
                         }
                         return true;
                     }
                 });
+
+    }
+
+
+    private void postAnimationOut(){
+        //Deaktiver scrolling for å unngå krasj som skjer hvor man scroller samtidig som animasjon
+        //mRecyclerView.setLayoutFrozen(true);
+        mRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                        int duration = 450;
+                        for (int i = 0; i < mRecyclerView.getChildCount(); i++) {
+                            duration = duration + 100;
+                            View v = mRecyclerView.getChildAt(i);
+                            View pRecycler = mRecyclerView;
+                            v.setTranslationX(0);
+                            v.animate()
+                                    .translationX(pRecycler.getWidth())
+                                    .setInterpolator(new AccelerateDecelerateInterpolator())
+                                    .alpha(-1f)
+                                    .setDuration(600)
+                                    .setStartDelay(i * 80)
+                                    .start();
+                        }
+                        return true;
+                    }
+                });
+
+        //Vent på at animasjon fullfører før innhenting av ny data
+        mRecyclerView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                initialiserData();
+            }
+        }, 700);
     }
 
     @Override
