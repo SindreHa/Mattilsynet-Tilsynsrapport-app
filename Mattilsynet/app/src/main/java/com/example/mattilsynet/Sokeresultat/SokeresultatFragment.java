@@ -115,7 +115,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
         recyclerViewFunksjoner();
     }
 
-    //Setter adapter på recyclerview som holder all data
+    //Setter adapter på recyclerview som setter inn all data
     private void oppdaterRecyclerView() {
         infoAdapter = new InfoListeAdapter(getContext(), infoListe, new InfoListeAdapter.OnItemClickListener() {
             @Override

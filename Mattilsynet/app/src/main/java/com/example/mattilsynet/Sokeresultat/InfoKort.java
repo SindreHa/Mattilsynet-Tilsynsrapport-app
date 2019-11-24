@@ -1,7 +1,5 @@
 package com.example.mattilsynet.Sokeresultat;
 
-import android.util.Log;
-
 import com.example.mattilsynet.R;
 
 import org.json.JSONArray;
@@ -13,7 +11,6 @@ import java.util.StringJoiner;
 
 public class InfoKort {
 
-
     private String tilsynId;
     private String stedNavn;
     private String stedOrgNr;
@@ -23,6 +20,7 @@ public class InfoKort {
     private String stedPoststed;
     private String stedKarakter;
 
+    //Navn for datahenting i JSONtabell
     static final String TABELL_NAVN         = "entries";
     static final String TILSYN_ID           = "tilsynid";
     static final String STED_NAVN           = "navn";
@@ -46,19 +44,22 @@ public class InfoKort {
         this.stedKarakter = jsonPost.optString(STED_KARAKTER);
     }
 
-
+    //Metode som returnerer en ArrayList med Infokort som settes inn i recyclerview
     public static ArrayList<InfoKort> lagInfoKort(String jsonPostString)
             throws JSONException, NullPointerException {
 
-        ArrayList<InfoKort> postListe = new ArrayList<InfoKort>();
+        //Lager en Arraylist
+        ArrayList<InfoKort> postListe = new ArrayList<>();
+        //Lager en instans av et JSONobjekt
         JSONObject jsonData  = new JSONObject(jsonPostString);
+        //Bruker JSONobjekt til å lage et JSONarray som brukes til å hente ut data
         JSONArray jsonPostTabell = jsonData.optJSONArray("entries");
 
         if(jsonPostTabell != null)
         {
             for (int i = 0; i < jsonPostTabell.length(); i++) {
+                //Henter ut data for et og et InfoKort og legger inn i Array
                 JSONObject jsonPost = (JSONObject) jsonPostTabell.get(i);
-                // jsonPost må matche verdiene i databasetabellen post
                 InfoKort infoKort = new InfoKort(jsonPost);
                 postListe.add(infoKort);
             }
@@ -106,6 +107,7 @@ public class InfoKort {
         return stedKarakter;
     }
 
+    //Returnerer drawable id for bilde
     public int getStedKarakterBilde() {
         int bilde = 0;
         switch (this.stedKarakter) {
@@ -120,7 +122,6 @@ public class InfoKort {
                 bilde = R.drawable.surfjes;
                 break;
         }
-        //Log.d(LOG_TAG, this.stedKarakter + "");
         return bilde;
     }
 }

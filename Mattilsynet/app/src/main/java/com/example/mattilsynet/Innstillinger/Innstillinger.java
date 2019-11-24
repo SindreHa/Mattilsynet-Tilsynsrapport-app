@@ -19,11 +19,13 @@ public class Innstillinger extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.innstillinger);
+        //Setter inn fragment av innstillinger
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.settings_layout, new SettingsFragment())
                 .commit();
 
+        //Setter tittel på toolbar
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle("Innstillinger");
@@ -31,6 +33,7 @@ public class Innstillinger extends AppCompatActivity {
         }
     }
 
+    //Sender bruker tilbake til hjem ved trykk på tilbakeknapp
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -41,14 +44,15 @@ public class Innstillinger extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //Klasse for innstillinger fragment
     public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.innstillinger_fragment, rootKey);
 
-
             //https://stackoverflow.com/questions/4005029/how-can-i-set-the-android-preference-summary-text-color/4047054#4047054
             Preference app_version = findPreference("app_version");
+            //Viser app versjon hentet fra gradle
             Spannable summary = new SpannableString(getString(R.string.versionName));
             summary.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.textWhiteSecondary)), 0, summary.length(), 0);
             app_version.setSummary(summary);

@@ -2,6 +2,7 @@ package com.example.mattilsynet.DetaljertVisning;
 
 
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -43,6 +44,19 @@ public class DetaljertVisningFragment extends Fragment implements
     public DetaljertVisningFragment() {
     }
 
+    //Disabler rotasjon https://stackoverflow.com/questions/29623752/turn-off-auto-rotation-in-fragment
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_detaljert_visning, container, false);
@@ -57,27 +71,39 @@ public class DetaljertVisningFragment extends Fragment implements
         initialiserData();
     }
 
+    /*
+     * Metoder for grafiske elementer
+     */
+
     private void initialiserView() {
         recyclerViewInit();
     }
 
+    //Setter opp recyclerview som viser kravpunkter
     private void recyclerViewInit() {
         mRecyclerView = view.findViewById(R.id.detaljer_kravpunkt_recycler);
         oppdaterRecyclerView();
     }
 
+    //Setter adapter på recyclerview som setter inn all data
     private void oppdaterRecyclerView() {
         kravpunkterAdapter = new KravpunkterAdapter(getContext(), kravpunkterListe);
         mRecyclerView.setAdapter(kravpunkterAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
+    /*
+     * Metoder for innhenting av data
+     */
+
     private void initialiserData() {
         settInnInfoData();
         hentKravpunkterData();
     }
 
+    //Funksjon som henter inn data med volley
     private void hentKravpunkterData() {
+        //Henter ut tilsynsid fra bundle sendt inn fra forrige fragment
         final Bundle arguments = getArguments();
         if (arguments != null) {
             tilsynId = arguments.getString("tilsynid");
@@ -92,6 +118,7 @@ public class DetaljertVisningFragment extends Fragment implements
         }
     }
 
+    //En enkel metode som setter all tilsyn info inn med data fra bundle
     private void settInnInfoData() {
 
         final Bundle infoKortBundle = getArguments();
@@ -110,10 +137,9 @@ public class DetaljertVisningFragment extends Fragment implements
         stedPostNr.setText(infoKortBundle.getString("stedPostKode"));
         TextView stedPoststed = view.findViewById(R.id.detaljer_poststed);
         stedPoststed.setText(infoKortBundle.getString("stedPostSted"));
-
     }
 
-    // Sjekker om nettverkstilgang
+    // Sjekker nettverkstilgang
     private boolean isOnline() {
         ConnectivityManager conMgr = (ConnectivityManager) getActivity().getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = conMgr.getActiveNetworkInfo();
@@ -128,11 +154,14 @@ public class DetaljertVisningFragment extends Fragment implements
     @Override
     public void onResponse(String response) {
         try{
-            kravpunkterListe = DetaljerKravpunkterKort.lagKravpunktKort(response);
-            oppdaterRecyclerView();
+            //Setter inn data for tilsyninfo
             settInnInfoData();
+            //Lager kravpunktliste
+            kravpunkterListe = DetaljerKravpunkterKort.lagKravpunktKort(response);
+            //Oppdaterer kravpunkt recycler
+            oppdaterRecyclerView();
         }catch (Exception e){
-            Log.d(LOG_TAG, "Error: " + e);
+            Log.d(LOG_TAG, "Kunne ikke hente kravpunktdata: " + e);
         }
     }
 }

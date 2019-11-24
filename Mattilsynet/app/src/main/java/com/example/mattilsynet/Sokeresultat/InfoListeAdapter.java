@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.InfoKortHolder>{
 
+    //ClickListener interface for infokort
     public interface OnItemClickListener {
         void onItemClick(InfoKort card);
     }
@@ -28,7 +29,6 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
     private LayoutInflater inflater;
     private int forrigePosisjon = -1;
     private Context context;
-    private final String LOG_TAG = InfoListeAdapter.class.getSimpleName();
 
     public InfoListeAdapter(Context context, ArrayList<InfoKort> infoListe, OnItemClickListener lytter){
         inflater = LayoutInflater.from(context);
@@ -45,7 +45,7 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
     }
 
     class InfoKortHolder extends RecyclerView.ViewHolder {
-        //public final ImageView sportImg;
+        //Klasse som setter data inn i recyclerview elementene, her da ett og ett infokort
         CardView kontainer;
         private final TextView tilsynId;
         private final TextView stedNavn;
@@ -57,9 +57,9 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
         private final ImageView stedKarakter;
         final InfoListeAdapter adapter;
 
+        //Metode som henter id'er til elementer
         private InfoKortHolder(View itemView, InfoListeAdapter adapter){
             super(itemView);
-            //this.stedNavn = itemView.findViewById(R.id.card_post_title);
             kontainer = itemView.findViewById(R.id.info_kort);
             this.tilsynId = itemView.findViewById(R.id.sted_tilsynsid);
             this.stedNavn = itemView.findViewById(R.id.info_kort_tittel);
@@ -70,10 +70,10 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
             this.stedPoststed = itemView.findViewById(R.id.info_kort_poststed);
             this.stedKarakter = itemView.findViewById(R.id.info_kort_karakter);
             this.adapter = adapter;
-            //itemView.setOnClickListener(Snackbar.make(itemView, "Dette skal føre til kommentarer", Snackbar.LENGTH_LONG).show());
         }
 
-        public void bind(final InfoKort card, final OnItemClickListener listener) {
+        //Setter ClickListener pr kort
+        private void bind(final InfoKort card, final OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View v) {
                     listener.onItemClick(card);
@@ -83,6 +83,7 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
 
     }
 
+    //Metode som setter data inn i elementer med get metoder satt i Infokort klassen
     @Override
     public void onBindViewHolder(@NonNull InfoKortHolder holder, int position) {
         holder.tilsynId.setText(infoListe.get(position).getTilsynId());
@@ -93,8 +94,10 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
         holder.stedPostkode.setText(infoListe.get(position).getStedPostkode());
         holder.stedPoststed.setText(infoListe.get(position).getStedPoststed());
         holder.stedKarakter.setImageResource(infoListe.get(position).getStedKarakterBilde());
+        //Setter ClickListener
         holder.bind(infoListe.get(position), lytter);
-        //listeScrollAnimasjon(holder.itemView, position);
+        //Setter animasjons egenskap
+        listeScrollAnimasjon(holder.itemView, position);
     }
 
     //Animasjon som fader inn infokort når man scroller
@@ -113,12 +116,14 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
         return infoListe.size();
     }
 
-    public void restoreInfoKort(InfoKort kort, int position) {
+    //Metode som gjenoppretter infokort når bruker angrer sletting
+    void restoreInfoKort(InfoKort kort, int position) {
         infoListe.add(position, kort);
         notifyItemInserted(position);
     }
 
-    public ArrayList<InfoKort> getInfoKort() {
+    //Metode som returnerer en instans av et infokort
+    ArrayList<InfoKort> getInfoKort() {
         return infoListe;
     }
 
