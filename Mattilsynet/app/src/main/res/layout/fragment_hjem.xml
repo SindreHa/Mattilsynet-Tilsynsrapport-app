@@ -35,7 +35,8 @@
         android:layout_below="@id/frontpage_header_text"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:animateLayoutChanges="true">
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -51,7 +52,14 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <CheckBox
+            android:id="@+id/bruk_favorittsted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bruk favorittsted"/>
+
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/sok_poststed_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -66,6 +74,12 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+        <CheckBox
+            android:id="@+id/bruk_gps_posisjon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bruk min posisjon"/>
+
         <Button
             android:id="@+id/sokeknapp"
             style="@android:style/Widget.Material.Button.Colored"
@@ -74,7 +88,8 @@
             android:layout_gravity="center"
             android:text="@string/sok"
             android:padding="15dp"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"/>
 
     </LinearLayout>
 

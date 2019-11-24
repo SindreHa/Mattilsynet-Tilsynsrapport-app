@@ -13,14 +13,14 @@
     <PreferenceCategory
         app:title="Stedspreferanser">
         <EditTextPreference
-            android:key="favouriteplace_pref"
+            android:key="favorittstednavn"
             app:title="Favorittsted"
             android:icon="@drawable/ic_home"
             app:useSimpleSummaryProvider="true"
             android:dialogMessage="Skriv navnet på ditt favorittsted"
             />
         <EditTextPreference
-            android:key="standard_year_sort"
+            android:key="favoritt_sortering"
             app:title="Standard årstall sortering"
             android:icon="@drawable/ic_year"
             app:useSimpleSummaryProvider="true"
