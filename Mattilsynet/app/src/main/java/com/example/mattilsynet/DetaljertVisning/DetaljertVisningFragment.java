@@ -16,8 +16,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -92,6 +95,35 @@ public class DetaljertVisningFragment extends Fragment implements
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
+    //Animasjon som får kortene til å skli inn fra bunn
+    private void recyclerAnimasjonInn() {
+        //https://stackoverflow.com/questions/38909542/how-to-animate-recyclerview-items-when-adapter-is-initialized-in-order
+        mRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+
+                    @Override
+                    public boolean onPreDraw() {
+                        mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                        for (int i = 0; i < mRecyclerView.getChildCount(); i++) {
+                            /*
+                             * Animasjon som animerer hvert kort synlig i view.
+                             * pr loop økes delay for å gi en mykere animasjon
+                             */
+                            View v = mRecyclerView.getChildAt(i);
+                            //Starter med å sette posisjon til bunn av skjermen
+                            v.setAlpha(0f);
+                            v.animate()
+                                    .alpha(1f) //Sender kort til toppen av recyclerView eller under neste kort
+                                    .setDuration(300) //Lengde i ms på animasjon pr kort
+                                    .setStartDelay(i * 50) //Tid før neste kort skal animeres
+                                    .start();
+                        }
+                        return true;
+                    }
+                });
+
+    }
+
     /*
      * Metoder for innhenting av data
      */
@@ -137,6 +169,8 @@ public class DetaljertVisningFragment extends Fragment implements
         stedPostNr.setText(infoKortBundle.getString("stedPostKode"));
         TextView stedPoststed = view.findViewById(R.id.detaljer_poststed);
         stedPoststed.setText(infoKortBundle.getString("stedPostSted"));
+        ImageView stedKarakterBilde = view.findViewById(R.id.detaljer_bilde);
+        stedKarakterBilde.setImageResource(infoKortBundle.getInt("stedKarakterBilde"));
     }
 
     // Sjekker nettverkstilgang
@@ -160,6 +194,7 @@ public class DetaljertVisningFragment extends Fragment implements
             kravpunkterListe = DetaljerKravpunkterKort.lagKravpunktKort(response);
             //Oppdaterer kravpunkt recycler
             oppdaterRecyclerView();
+            recyclerAnimasjonInn();
         }catch (Exception e){
             Log.d(LOG_TAG, "Kunne ikke hente kravpunktdata: " + e);
         }

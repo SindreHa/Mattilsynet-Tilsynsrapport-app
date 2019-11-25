@@ -16,7 +16,6 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarKonfigurasjon;
-    private NavController navKontroller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         //Oppsett av host til fragment hvor alle fragmenter navigeres imellom
-        navKontroller = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavController navKontroller = Navigation.findNavController(this, R.id.nav_host_fragment);
         //Setter opp navigasjon med actionbar i toppen
         NavigationUI.setupActionBarWithNavController(this, navKontroller);
     }

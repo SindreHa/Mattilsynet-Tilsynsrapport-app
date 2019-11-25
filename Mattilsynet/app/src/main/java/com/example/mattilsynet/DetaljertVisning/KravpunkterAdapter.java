@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,10 +20,13 @@ public class KravpunkterAdapter extends RecyclerView.Adapter<KravpunkterAdapter.
 
     private final ArrayList<DetaljerKravpunkterKort> kravpunkterListe;
     private LayoutInflater inflater;
+    private int forrigePosisjon = -1;
+    private Context context;
 
     KravpunkterAdapter(Context context, ArrayList<DetaljerKravpunkterKort> kravpunkterListe){
         inflater = LayoutInflater.from(context);
         this.kravpunkterListe = kravpunkterListe;
+        this.context = context;
     }
 
     @NonNull
@@ -50,6 +55,19 @@ public class KravpunkterAdapter extends RecyclerView.Adapter<KravpunkterAdapter.
     public void onBindViewHolder(@NonNull kravpunktHolder holder, int position) {
         holder.kravpunktTittel.setText(kravpunkterListe.get(position).getKravpunktTittel());
         holder.kravpunktKarakter.setText(kravpunkterListe.get(position).getKravpunktKarakter());
+        listeScrollAnimasjon(holder.itemView, position);
+    }
+
+
+    //Animasjon som fader inn infokort når man scroller
+    private void listeScrollAnimasjon(View kravPunkt, int posisjon)
+    {
+        if (posisjon > forrigePosisjon || posisjon < forrigePosisjon)
+        {
+            Animation animasjon = AnimationUtils.loadAnimation(context, R.anim.nav_default_enter_anim);
+            kravPunkt.startAnimation(animasjon);
+            forrigePosisjon = posisjon;
+        }
     }
 
     @Override

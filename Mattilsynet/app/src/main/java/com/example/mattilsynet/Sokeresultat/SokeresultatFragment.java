@@ -27,6 +27,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -121,7 +124,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
             @Override
             public void onItemClick(InfoKort infoKort) {
                 //Lag bundle med all data fra kort og send til detaljert visning
-                Bundle b = new Bundle();
+                final Bundle b = new Bundle();
                 b.putString("tilsynid", infoKort.getTilsynId());
                 b.putString("stedNavn", infoKort.getStedNavn());
                 b.putString("stedOrgNr", infoKort.getStedOrgNr());
@@ -130,7 +133,17 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
                 b.putString("stedAdresse", infoKort.getStedAdresse());
                 b.putString("stedPostKode", infoKort.getStedPostkode());
                 b.putString("stedPostSted", infoKort.getStedPoststed());
-                Navigation.findNavController(view).navigate(R.id.action_nav_search_result_to_nav_detailed_view, b);
+                b.putInt("stedKarakterBilde", infoKort.getStedKarakterBilde());
+
+                //Setter liten delay før navigering til neste side for en mykere opplevelse
+                //siden man kan se trykk animasjonen fullføres
+                mRecyclerView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Navigation.findNavController(view).navigate(R.id.action_nav_search_result_to_nav_detailed_view, b);
+                    }
+                }, 150);
+
             }
         });
         mRecyclerView.setAdapter(infoAdapter);
@@ -167,7 +180,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
                 filterArstall = "";
                 oppdater.setRefreshing(true);
                 //Kjører animasjon ut, som avslutter med å kjøre initialiserData()
-                recyclerAnimasjonUt();
+                recyclerAnimasjonUt(0);
             }
         });
     }
@@ -184,7 +197,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
                     @Override
                     public void onRefresh() {
                         //Kjører animasjon ut, som avslutter med å kjøre initialiserData()
-                        recyclerAnimasjonUt();
+                        recyclerAnimasjonUt(0);
                     }
                 }
         );
@@ -274,7 +287,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
         LayoutInflater inflater = getLayoutInflater();
         View dialoglayout = inflater.inflate(R.layout.filter_dialog_edittext, null); //Edittext layout i dialog
         final EditText text = dialoglayout.findViewById(R.id.filter); //tekstfelt bruker skriver inn i
-        AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getContext(),R.style.AlertDialogCustom))
+        final AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(getContext(),R.style.AlertDialogCustom))
                 .setTitle("Skriv inn ønsket dato")
                 .setMessage("Skriv inn dato uten mellomtegn, f.eks 012018 gir deg alt fra januar 2018")
                 .setView(dialoglayout)
@@ -286,6 +299,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
 
                         //Sjekker om bruker har skrivd inn data, hvis ikke skjer ingenting
                         if (!filterArstall.matches("")) {
+                            hideKeyboardFrom(getContext(), view);
                             klarerFilterVerdi.setText(filterArstall);
                             //Animasjon som gjør at aktivt filter "popper ut"
                             fjernFilterKort.setScaleX(0);
@@ -298,8 +312,11 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
                                     .start();
 
                             oppdater.setRefreshing(true);
+
                             //Kjører animasjon ut, som avslutter med å kjøre initialiserData()
-                            recyclerAnimasjonUt();
+                            //Bruker delay så tastatur rekker å skjules siden dette lagde en bug for animasjon ut
+                            hideKeyboardFrom(getContext(), view);
+                            recyclerAnimasjonUt(200);
                         }
                     }
                 })
@@ -353,38 +370,53 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
     }
 
     //Animasjon som får kortene til å skli ut til siden
-    private void recyclerAnimasjonUt(){
-        mRecyclerView.getViewTreeObserver().addOnPreDrawListener(
-                new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
-                        for (int i = 0; i < mRecyclerView.getChildCount(); i++) {
-                            /*
-                             * Animasjon som fader ut hvert kort synlig i view.
-                             * pr loop økes delay for å gi en mykere animasjon
-                             */
-                            View v = mRecyclerView.getChildAt(i);
-                            View pRecycler = mRecyclerView;
-                            v.animate()
-                                    .translationX(pRecycler.getWidth()) //Setter posisjon helt til høyre i view
-                                    .setInterpolator(new AccelerateDecelerateInterpolator()) //Animasjon timing
-                                    .alpha(-1f) //Kort blir totalt gjennomsiktig halvveis inn i animasjonen
-                                    .setDuration(600) //Lengde i ms på animasjon pr kort
-                                    .setStartDelay(i * 80) //Tid før neste kort skal animeres
-                                    .start();
-                        }
-                        return true;
-                    }
-                });
-
-        //Vent på at animasjon fullfører før innhenting av ny data
+    private void recyclerAnimasjonUt(int delay){
+        //Setter liten delay før navigering til neste side for en mykere opplevelse
+        //siden man kan se trykk animasjonen fullføres
         mRecyclerView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                initialiserData();
+                mRecyclerView.getViewTreeObserver().addOnPreDrawListener(
+                        new ViewTreeObserver.OnPreDrawListener() {
+                            @Override
+                            public boolean onPreDraw() {
+                                mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                                for (int i = 0; i < mRecyclerView.getChildCount(); i++) {
+                                    /*
+                                     * Animasjon som fader ut hvert kort synlig i view.
+                                     * pr loop økes delay for å gi en mykere animasjon
+                                     */
+                                    View v = mRecyclerView.getChildAt(i);
+                                    View pRecycler = mRecyclerView;
+                                    v.animate()
+                                            .translationX(pRecycler.getWidth()) //Setter posisjon helt til høyre i view
+                                            .setInterpolator(new AccelerateDecelerateInterpolator()) //Animasjon timing
+                                            .alpha(-1f) //Kort blir totalt gjennomsiktig halvveis inn i animasjonen
+                                            .setDuration(600) //Lengde i ms på animasjon pr kort
+                                            .setStartDelay(i * 80) //Tid før neste kort skal animeres
+                                            .start();
+                                }
+                                return true;
+                            }
+                        });
+
+                //Vent på at animasjon fullfører før innhenting av ny data
+                mRecyclerView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        initialiserData();
+                    }
+                }, 700);
             }
-        }, 700);
+        }, delay);
+
+    }
+
+
+    //Legger ned virtuelt tastatur https://stackoverflow.com/questions/1109022/close-hide-the-android-soft-keyboard
+    public static void hideKeyboardFrom(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     /*
@@ -427,12 +459,17 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
     @Override
     public void onResponse(String response) {
 
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator());
+        fadeIn.setDuration(500);
+
         oppdater.setRefreshing(false);
         LinearLayout ingenTreff = view.findViewById(R.id.no_search_result);
         String sok  = ":[]"; //Hvis det ikke er noen treff viser entries tabellen :[]
 
         if (response.toLowerCase().contains(sok.toLowerCase())) {
             ingenTreff.setVisibility(View.VISIBLE);
+            ingenTreff.startAnimation(fadeIn);
             mRecyclerView.setVisibility(View.GONE);
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
@@ -459,9 +496,4 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
     @Override
     public void onItemClick(InfoKort card) { }
 
-    //Legger ned virtuelt tastatur https://stackoverflow.com/questions/1109022/close-hide-the-android-soft-keyboard
-    public static void hideKeyboardFrom(Context context, View view) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
 }

@@ -13,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -43,6 +44,7 @@ import com.example.mattilsynet.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.json.JSONArray;
@@ -82,6 +84,7 @@ public class HjemFragment extends Fragment implements
     @Override
     public void onResume() {
         super.onResume();
+        sokeKriterierCheckbox();
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
@@ -99,6 +102,12 @@ public class HjemFragment extends Fragment implements
         initialiserView();
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
+        hentGPSPosisjon();
     }
 
     //Lager optionsmenu hvor innstillinger snarevei vises
@@ -131,7 +140,7 @@ public class HjemFragment extends Fragment implements
     //Metode som setter klikkluttere
     private void settKlikkLyttere() {
 
-        Button sokeKnapp = view.findViewById(R.id.sokeknapp);
+        final Button sokeKnapp = view.findViewById(R.id.sokeknapp);
 
         //Setter lytter på søkeknapp
         sokeKnapp.setOnClickListener(new View.OnClickListener() {
@@ -139,10 +148,18 @@ public class HjemFragment extends Fragment implements
             public void onClick(View v) {
                 hideKeyboardFrom(getContext(), v);
                 //Lager bundle som sender inn søkeurl som brukes i neste fragment
-                Bundle b = new Bundle();
+                final Bundle b = new Bundle();
                 hentSokeKriterierURL();
                 b.putString("sokeKriterier", sokeUrl);
-                Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_search_result, b);
+                Log.d(LOG_TAG, sokeUrl);
+                //Setter liten delay før navigering til neste side for en mykere opplevelse
+                //siden man kan se trykk animasjonen fullføres
+                sokeKnapp.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Navigation.findNavController(view).navigate(R.id.action_nav_home_to_nav_search_result, b);
+                    }
+                }, 150);
             }
         });
 
@@ -181,9 +198,16 @@ public class HjemFragment extends Fragment implements
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (brukGPSPosisjon.isChecked()) {
-                    //Skjuler felt for postssted siden det ikke trengs
-                    sokPoststedContainer.setVisibility(View.GONE);
-                    hentGPSPosisjon();
+                    if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                            Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        brukGPSPosisjon.setChecked(false);
+                        lagSnackbar("Vennligst tillat henting av posisjon i innstillinger");
+                    } else {
+                        //Skjuler felt for postssted siden det ikke trengs
+                        sokPoststedContainer.setVisibility(View.GONE);
+                        //Ber metode som å hente ut postnummer med volley
+                        hentGPSPosisjon();
+                        hentPostkode(); }
                 } else {
                     //Gjør felt for poststed synlig igjen
                     sokPoststedContainer.setVisibility(View.VISIBLE);
@@ -196,6 +220,19 @@ public class HjemFragment extends Fragment implements
     public static void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+
+    //Enkel funksjon som viser en snackbar med melding som parameter
+    private void lagSnackbar(String melding) {
+        final Snackbar snackBar = Snackbar.make(view, melding, Snackbar.LENGTH_LONG);
+        snackBar.setAction("Ok", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                snackBar.dismiss();
+            }
+        });
+        snackBar.show();
     }
 
 
@@ -250,8 +287,6 @@ public class HjemFragment extends Fragment implements
                                 //Setter lon og lat verdier
                                 lon = location.getLongitude();
                                 lat = location.getLatitude();
-                                //Ber metode som å hente ut postnummer med volley
-                                hentPostkode();
                             }
                         }
                     });
@@ -267,7 +302,7 @@ public class HjemFragment extends Fragment implements
         String postkodeURL = "https://ws.geonorge.no/adresser/v1/punktsok?radius=2000&lat=" + lat
                 + "&lon=" + lon + "&filtrer=adresser.postnummer&treffPerSide=1&side=0";
 
-        Log.d(LOG_TAG, postkodeURL);
+        //Log.d(LOG_TAG, postkodeURL);
         if (isOnline()){
             RequestQueue queue = Volley.newRequestQueue(getContext());
             StringRequest stringRequest =
@@ -299,7 +334,7 @@ public class HjemFragment extends Fragment implements
 
     @Override
     public void onResponse(String response) {
-        Log.d(LOG_TAG, response);
+        //Log.d(LOG_TAG, response);
         try {
             JSONTilString(response);
         } catch (Exception e){
