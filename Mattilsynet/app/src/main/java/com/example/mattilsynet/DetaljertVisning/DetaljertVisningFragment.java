@@ -46,7 +46,7 @@ public class DetaljertVisningFragment extends Fragment implements
 
     public DetaljertVisningFragment() {
     }
-
+/*
     //Disabler rotasjon https://stackoverflow.com/questions/29623752/turn-off-auto-rotation-in-fragment
     @Override
     public void onResume() {
@@ -59,7 +59,7 @@ public class DetaljertVisningFragment extends Fragment implements
         super.onPause();
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
-
+*/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_detaljert_visning, container, false);

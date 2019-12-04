@@ -85,14 +85,14 @@ public class HjemFragment extends Fragment implements
     public void onResume() {
         super.onResume();
         sokeKriterierCheckbox();
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
-
+/*
     @Override
     public void onPause() {
         super.onPause();
         getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
     }
+ */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -149,7 +149,13 @@ public class HjemFragment extends Fragment implements
                 hideKeyboardFrom(getContext(), v);
                 //Lager bundle som sender inn søkeurl som brukes i neste fragment
                 final Bundle b = new Bundle();
-                hentSokeKriterierURL();
+                if (gpsPostkode==null) {
+                    hentGPSPosisjon();
+                    hentPostkode();
+                    hentSokeKriterierURL();
+                } else {
+                    hentSokeKriterierURL();
+                }
                 b.putString("sokeKriterier", sokeUrl);
                 Log.d(LOG_TAG, sokeUrl);
                 //Setter liten delay før navigering til neste side for en mykere opplevelse
@@ -207,7 +213,8 @@ public class HjemFragment extends Fragment implements
                         sokPoststedContainer.setVisibility(View.GONE);
                         //Ber metode som å hente ut postnummer med volley
                         hentGPSPosisjon();
-                        hentPostkode(); }
+                        hentPostkode();
+                    }
                 } else {
                     //Gjør felt for poststed synlig igjen
                     sokPoststedContainer.setVisibility(View.VISIBLE);
@@ -337,6 +344,7 @@ public class HjemFragment extends Fragment implements
         //Log.d(LOG_TAG, response);
         try {
             JSONTilString(response);
+
         } catch (Exception e){
             Log.d(LOG_TAG, "Kunne ikke hente GPS Postkode: " + e);
         }
