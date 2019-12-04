@@ -1,5 +1,7 @@
 package com.example.mattilsynet.Sokeresultat;
 
+import android.os.Build;
+
 import com.example.mattilsynet.R;
 
 import org.json.JSONArray;
@@ -86,7 +88,11 @@ public class InfoKort {
         //Gjør om dato til en mer lesbar dato https://stackoverflow.com/questions/63150/whats-the-best-way-to-build-a-string-of-delimited-items-in-java
         String datoArr[] = this.stedDato.split("");
         StringJoiner joiner = new StringJoiner("/");
-        joiner.add(datoArr[1] + datoArr[2]).add(datoArr[3] + datoArr[4]).add(datoArr[5] + datoArr[6] + datoArr[7] + datoArr[8]);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            joiner.add(datoArr[0] + datoArr[1]).add(datoArr[2] + datoArr[3]).add(datoArr[4] + datoArr[5] + datoArr[6] + datoArr[7]);
+        } else {
+            joiner.add(datoArr[1] + datoArr[2]).add(datoArr[3] + datoArr[4]).add(datoArr[5] + datoArr[6] + datoArr[7] + datoArr[8]);
+        }
         String joinedString = joiner.toString();
         return joinedString;
     }
