@@ -70,7 +70,7 @@
         android:layout_marginRight="10dp"
         android:clickable="true"
         android:foreground="?android:selectableItemBackground"
-        app:cardBackgroundColor="@color/colorCardBackground">
+        app:cardBackgroundColor="@color/colorAccent">
 
         <LinearLayout
             android:layout_width="wrap_content"

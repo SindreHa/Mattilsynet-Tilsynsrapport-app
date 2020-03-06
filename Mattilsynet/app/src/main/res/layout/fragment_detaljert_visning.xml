@@ -10,12 +10,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:animateLayoutChanges="true">
+        android:animateLayoutChanges="true"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/detailed_view_progressbar"
+            android:layout_marginBottom="@dimen/vertical_card_margin_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
         <TextView
             android:id="@+id/detaljer_navn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="7dp"
             android:layout_marginStart="20dp"
             android:gravity="start"
             android:textColor="@color/textWhitePrimary"
@@ -142,7 +150,8 @@
         android:layout_height="wrap_content"
         android:text="@string/kravpunkter"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="6dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         android:textStyle="normal"/>
 
@@ -153,7 +162,6 @@
         app:cardCornerRadius="@dimen/card_radius"
         android:layout_marginStart="@dimen/vertical_card_margin_horizontal"
         android:layout_marginEnd="@dimen/vertical_card_margin_horizontal"
-        android:layout_marginTop="@dimen/vertical_card_margin_vertical"
         android:layout_marginBottom="8dp"
         android:animateLayoutChanges="true">
         <androidx.recyclerview.widget.RecyclerView

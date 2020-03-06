@@ -113,6 +113,23 @@ public class InfoKort {
         return stedKarakter;
     }
 
+    public int getGradient() {
+        int bakgrunn = 0;
+        switch (this.stedKarakter) {
+            //https://data.norge.no/data/mattilsynet/smilefjestilsyn-p%C3%A5-serveringssteder
+            case "0": case "1":
+                bakgrunn = R.drawable.card_gradient_green;
+                break;
+            case "2":
+                bakgrunn = R.drawable.card_gradient_orange;
+                break;
+            case "3":
+                bakgrunn = R.drawable.card_gradient_red;
+                break;
+        }
+        return bakgrunn;
+    }
+
     //Returnerer drawable id for bilde
     public int getStedKarakterBilde() {
         int bilde = 0;

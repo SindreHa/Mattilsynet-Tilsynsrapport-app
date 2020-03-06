@@ -182,21 +182,6 @@ public class HjemFragment extends Fragment implements
             innstillinger = PreferenceManager.getDefaultSharedPreferences(getContext());
         }
 
-        final String favorittStedNavn = innstillinger.getString("favorittstednavn", "");
-
-        //Lytter på avhuk boks for å bruke lagret favorittsted
-        final CheckBox brukFavorittsted = view.findViewById(R.id.bruk_favorittsted);
-        brukFavorittsted.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (brukFavorittsted.isChecked()) {
-                    stedNavn.setText(favorittStedNavn);
-                } else {
-                    stedNavn.setText("");
-                }
-            }
-        });
-
         //Lytter for avhuk av "Bruk min posisjon" boks
         final TextInputLayout sokPoststedContainer = view.findViewById(R.id.sok_poststed_container);
         final CheckBox brukGPSPosisjon = view.findViewById(R.id.bruk_gps_posisjon);
@@ -276,6 +261,9 @@ public class HjemFragment extends Fragment implements
         //Legger til sortering på årstall hvis det er lagret et årstall i innstillinger
         if (!favorittSortering.isEmpty()) {
             sokeUrl += "&dato=*" + favorittSortering;
+        }
+        else {
+            //sokeUrl += "&dato=2019";
         }
         //Log.d(LOG_TAG, sokeUrl);
     }

@@ -10,13 +10,16 @@
     app:cardBackgroundColor="@color/colorCardBackground"
     app:cardCornerRadius="@dimen/card_radius"
     android:foreground="?android:selectableItemBackground"
-    android:clickable="true">
+    android:focusable="true"
+    >
 
     <RelativeLayout
+        android:id="@+id/info_kort_gradient"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp">
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:paddingStart="14dp">
 
         <LinearLayout
             android:id="@+id/info_card_title_lay"
@@ -27,54 +30,33 @@
                 android:layout_width="wrap_content"
                 android:maxWidth="270dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginEnd="32dp"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textSize="20sp"
                 android:textColor="@color/textWhitePrimary" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/info_card_orgnr_lay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/info_card_title_lay"
-            android:layout_marginTop="6dp">
-            <TextView
-                android:id="@+id/info_card_orgnr_string"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:text="Org. nr: "
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:textColor="@color/textWhiteSecondary" />
-            <TextView
-                android:id="@+id/info_kort_orgnr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:textColor="@color/textWhiteSecondary" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/info_card_date_lay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/info_card_orgnr_lay"
-            android:layout_marginTop="6dp">
+            android:layout_below="@id/info_card_title_lay"
+            android:layout_marginTop="3dp">
             <TextView
                 android:id="@+id/info_card_date_string"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:text="Dato: "
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:textColor="@color/textWhiteSecondary" />
+                android:textSize="15sp"
+                android:textColor="@color/colorAccent" />
             <TextView
                 android:id="@+id/info_kort_dato"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:textColor="@color/textWhiteSecondary" />
+                android:textSize="15sp"
+                android:textColor="@color/colorAccent" />
         </LinearLayout>
 
         <LinearLayout
@@ -82,15 +64,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/info_card_date_lay"
-            android:layout_marginTop="6dp">
+            android:layout_marginTop="3dp">
             <TextView
                 android:id="@+id/info_kort_adr"
                 android:layout_width="wrap_content"
                 android:maxWidth="270dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginEnd="32dp"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textSize="15sp"
                 android:textColor="@color/textWhiteSecondary" />
         </LinearLayout>
 
@@ -105,9 +87,9 @@
                 android:layout_width="wrap_content"
                 android:maxWidth="270dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginEnd="32dp"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textSize="15sp"
                 android:textColor="@color/textWhiteSecondary" />
         </LinearLayout>
 
@@ -121,9 +103,9 @@
                 android:layout_width="wrap_content"
                 android:maxWidth="270dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginEnd="32dp"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:textSize="15sp"
                 android:textColor="@color/textWhiteSecondary" />
         </LinearLayout>
 

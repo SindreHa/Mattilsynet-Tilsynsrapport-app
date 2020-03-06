@@ -9,6 +9,7 @@
 
     <color name="textWhitePrimary">#DFFFFFFF</color>
     <color name="textWhiteSecondary">#99FFFFFF</color>
+    <color name="textBlue">#2196F3</color>
     <color name="textWhiteHint">#61FFFFFF</color>
 
     <color name="mtrl_textinput_default_box_stroke_color">#696969</color>

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,11 +50,12 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
         CardView kontainer;
         private final TextView tilsynId;
         private final TextView stedNavn;
-        private final TextView stedorgNr;
+        //private final TextView stedorgNr;
         private final TextView stedDato;
         private final TextView stedAdresse;
         private final TextView stedPostkode;
         private final TextView stedPoststed;
+        private final RelativeLayout bakgrunn;
         private final ImageView stedKarakter;
         final InfoListeAdapter adapter;
 
@@ -63,11 +65,12 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
             kontainer = itemView.findViewById(R.id.info_kort);
             this.tilsynId = itemView.findViewById(R.id.sted_tilsynsid);
             this.stedNavn = itemView.findViewById(R.id.info_kort_tittel);
-            this.stedorgNr = itemView.findViewById(R.id.info_kort_orgnr);
+            //this.stedorgNr = itemView.findViewById(R.id.info_kort_orgnr);
             this.stedDato = itemView.findViewById(R.id.info_kort_dato);
             this.stedAdresse = itemView.findViewById(R.id.info_kort_adr);
             this.stedPostkode = itemView.findViewById(R.id.info_kort_postkode);
             this.stedPoststed = itemView.findViewById(R.id.info_kort_poststed);
+            this.bakgrunn = itemView.findViewById(R.id.info_kort_gradient);
             this.stedKarakter = itemView.findViewById(R.id.info_kort_karakter);
             this.adapter = adapter;
         }
@@ -88,11 +91,12 @@ public class InfoListeAdapter extends RecyclerView.Adapter<InfoListeAdapter.Info
     public void onBindViewHolder(@NonNull InfoKortHolder holder, int position) {
         holder.tilsynId.setText(infoListe.get(position).getTilsynId());
         holder.stedNavn.setText(infoListe.get(position).getStedNavn());
-        holder.stedorgNr.setText(infoListe.get(position).getStedOrgNr());
+        //holder.stedorgNr.setText(infoListe.get(position).getStedOrgNr());
         holder.stedDato.setText(infoListe.get(position).getStedDato());
         holder.stedAdresse.setText(infoListe.get(position).getStedAdresse());
         holder.stedPostkode.setText(infoListe.get(position).getStedPostkode());
         holder.stedPoststed.setText(infoListe.get(position).getStedPoststed());
+        //holder.bakgrunn.setBackgroundResource(infoListe.get(position).getGradient());
         holder.stedKarakter.setImageResource(infoListe.get(position).getStedKarakterBilde());
         //Setter ClickListener
         holder.bind(infoListe.get(position), lytter);

@@ -52,11 +52,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <CheckBox
-            android:id="@+id/bruk_favorittsted"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Bruk favorittsted"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/sok_poststed_container"

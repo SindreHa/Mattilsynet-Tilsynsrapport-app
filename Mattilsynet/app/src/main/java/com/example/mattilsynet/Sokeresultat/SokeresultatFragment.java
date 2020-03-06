@@ -142,7 +142,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
                     public void run() {
                         Navigation.findNavController(view).navigate(R.id.action_nav_search_result_to_nav_detailed_view, b);
                     }
-                }, 150);
+                }, 80);
 
             }
         });
@@ -439,6 +439,7 @@ public class SokeresultatFragment extends Fragment implements InfoListeAdapter.O
         if (isOnline()){
             //Lager ny volleyrequest med opprettet url
             RequestQueue queue = Volley.newRequestQueue(getContext());
+            //Log.d(LOG_TAG, infoliste_URL);
             StringRequest stringRequest =
                     new StringRequest(Request.Method.GET, infoliste_URL, this, this);
             queue.add(stringRequest);

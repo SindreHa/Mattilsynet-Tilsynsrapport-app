@@ -1,6 +1,8 @@
 package com.example.mattilsynet.DetaljertVisning;
 
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
@@ -19,8 +21,10 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -33,6 +37,8 @@ import com.example.mattilsynet.R;
 
 import java.util.ArrayList;
 
+import static android.animation.ObjectAnimator.ofInt;
+
 public class DetaljertVisningFragment extends Fragment implements
         Response.Listener<String>, Response.ErrorListener  {
 
@@ -40,26 +46,14 @@ public class DetaljertVisningFragment extends Fragment implements
     private View view;
     private RecyclerView mRecyclerView;
     private KravpunkterAdapter kravpunkterAdapter;
+    private ProgressBar progressBar;
+    private ObjectAnimator anim;
     private ArrayList<DetaljerKravpunkterKort> kravpunkterListe = new ArrayList<>();
     private final String LOG_TAG = DetaljerKravpunkterKort.class.getSimpleName();
     public final static String KRAVPUNKTER_URL = "https://hotell.difi.no/api/json/mattilsynet/smilefjes/kravpunkter?";
 
-    public DetaljertVisningFragment() {
-    }
-/*
-    //Disabler rotasjon https://stackoverflow.com/questions/29623752/turn-off-auto-rotation-in-fragment
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    }
+    public DetaljertVisningFragment() { }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-    }
-*/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_detaljert_visning, container, false);
@@ -71,7 +65,40 @@ public class DetaljertVisningFragment extends Fragment implements
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        initialiserData();
+        settInnInfoData();
+    }
+
+    @Override
+    public Animation onCreateAnimation(int transit, final boolean enter, int nextAnim) {
+        Animation anim = AnimationUtils.loadAnimation(getActivity(), nextAnim);
+
+        anim.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+                Log.d(LOG_TAG, "Animation started.");
+                progressBar(0);
+                // additional functionality
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+                Log.d(LOG_TAG, "Animation repeating.");
+                // additional functionality
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Log.d(LOG_TAG, "Animation ended.");
+                if (enter) {
+                    progressBar(33);
+                    initialiserData();
+                }
+                // additional functionality
+            }
+        });
+
+        return anim;
     }
 
     /*
@@ -95,7 +122,6 @@ public class DetaljertVisningFragment extends Fragment implements
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
-    //Animasjon som får kortene til å skli inn fra bunn
     private void recyclerAnimasjonInn() {
         //https://stackoverflow.com/questions/38909542/how-to-animate-recyclerview-items-when-adapter-is-initialized-in-order
         mRecyclerView.getViewTreeObserver().addOnPreDrawListener(
@@ -110,10 +136,9 @@ public class DetaljertVisningFragment extends Fragment implements
                              * pr loop økes delay for å gi en mykere animasjon
                              */
                             View v = mRecyclerView.getChildAt(i);
-                            //Starter med å sette posisjon til bunn av skjermen
                             v.setAlpha(0f);
                             v.animate()
-                                    .alpha(1f) //Sender kort til toppen av recyclerView eller under neste kort
+                                    .alpha(1f)
                                     .setDuration(300) //Lengde i ms på animasjon pr kort
                                     .setStartDelay(i * 50) //Tid før neste kort skal animeres
                                     .start();
@@ -124,12 +149,35 @@ public class DetaljertVisningFragment extends Fragment implements
 
     }
 
+    private void progressBar(int prog) {
+        if (progressBar==null) {
+            progressBar = view.findViewById(R.id.detailed_view_progressbar);
+            progressBar.setProgress(0);
+        }
+        anim = ObjectAnimator.ofInt(progressBar, "progress", prog);
+        anim.setInterpolator(new DecelerateInterpolator(4));
+        anim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) { }
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                if (progressBar.getProgress()==100) {
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+            @Override
+            public void onAnimationCancel(Animator animator) { }
+            @Override
+            public void onAnimationRepeat(Animator animator) { }
+        });
+        anim.setDuration(500).start();
+    }
+
     /*
      * Metoder for innhenting av data
      */
 
     private void initialiserData() {
-        settInnInfoData();
         hentKravpunkterData();
     }
 
@@ -195,6 +243,7 @@ public class DetaljertVisningFragment extends Fragment implements
             //Oppdaterer kravpunkt recycler
             oppdaterRecyclerView();
             recyclerAnimasjonInn();
+            progressBar(100);
         }catch (Exception e){
             Log.d(LOG_TAG, "Kunne ikke hente kravpunktdata: " + e);
         }

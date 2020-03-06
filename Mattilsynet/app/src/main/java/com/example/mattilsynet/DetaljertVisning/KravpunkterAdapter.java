@@ -62,7 +62,7 @@ public class KravpunkterAdapter extends RecyclerView.Adapter<KravpunkterAdapter.
     //Animasjon som fader inn infokort når man scroller
     private void listeScrollAnimasjon(View kravPunkt, int posisjon)
     {
-        if (posisjon > forrigePosisjon || posisjon < forrigePosisjon)
+        if (posisjon > forrigePosisjon)
         {
             Animation animasjon = AnimationUtils.loadAnimation(context, R.anim.nav_default_enter_anim);
             kravPunkt.startAnimation(animasjon);
