@@ -26,3 +26,7 @@ evt. fast årstall for filtrering av Tilsyn.
 
 ### Hvordan kjøre
 Appen er laget i [AndroidStudio](https://developer.android.com/studio) og kan derfra kjøres via enten en emulator eller en fysisk Android enhet. Appen kan kjøres med Oreo (8.0) og oppover.
+
+### Skjermbilder av applikasjon
+![skjermbilder](https://i.imgur.com/kQQGyPc.jpg)
+
